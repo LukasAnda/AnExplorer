@@ -109,4 +109,11 @@
     <string name="cloud_box">Box</string>
     <string name="network_ftp">FTP</string>
     <string name="enjoying_app">Enjoying Open it?</string>
+    <string name="key_file_size">fileSize</string>
+    <string name="key_folder_size">folderSize</string>
+    <string name="key_file_thumbnail">fileThumbnail</string>
+    <string name="key_file_hidden">fileHidden</string>
+    <string name="key_recent_media">recentMedia</string>
+    <string name="key_theme_style">themeStyle</string>
+    <string name="key_primary_color">primaryColor</string>
 </resources>
