@@ -13,15 +13,17 @@ android {
     buildToolsVersion '28.0.2'
 
     applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "${parent.name}-${variant.name}-${variant.versionName}.apk"
+        variant.outputs.all { output ->
+            output.versionCodeOverride =
+                    project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + android.defaultConfig.versionCode
+            outputFileName = "${parent.name}-${variant.name}-${variant.versionName}-${output.getFilter(com.android.build.OutputFile.ABI)}.apk"
         }
     }
 
     defaultConfig {
         versionName "3.9"
-        versionCode = 63
-        minSdkVersion 17
+        versionCode = 83
+        minSdkVersion 21
         targetSdkVersion 28
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "LICENSE_KEY",  "$props.LICENSE_KEY"
@@ -33,7 +35,24 @@ android {
         buildConfigField "String", "BOX_CLIENT_KEY",  "$props.BOX_CLIENT_KEY"
         buildConfigField "String", "PLAYSTORE_LICENSE_KEY",  "$props.PLAYSTORE_LICENSE_KEY"
         buildConfigField "String", "MERCHANT_ID",  "$props.MERCHANT_ID"
+
+        multiDexEnabled true
+
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a' //select ABIs to build APKs for
+            universalApk true //generate an additional APK that contains all the ABIs
+        }
+    }
+
+    // map for the version code
+    project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
+
+
     signingConfigs {
         release
     }
@@ -57,17 +76,12 @@ android {
     flavorDimensions "release", "default"
     productFlavors {
         free {
-            applicationId "dev.dworks.apps.anexplorer"
+            applicationId "com.tproductions.Openit"
             dimension "default"
             buildConfigField "String", "GOOGLE_DRIVE_CLIENT_ID",  "$props.GOOGLE_DRIVE_CLIENT_ID"
         }
         pro {
-            applicationId "dev.dworks.apps.anexplorer.pro"
-            dimension "default"
-            buildConfigField "String", "GOOGLE_DRIVE_CLIENT_ID",  "$props.GOOGLE_DRIVE_PRO_CLIENT_ID"
-        }
-        underground {
-            applicationId "dev.dworks.apps.anexplorer.underground"
+            applicationId "com.tproductions.Openit.pro"
             dimension "default"
             buildConfigField "String", "GOOGLE_DRIVE_CLIENT_ID",  "$props.GOOGLE_DRIVE_PRO_CLIENT_ID"
         }
@@ -94,6 +108,11 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 

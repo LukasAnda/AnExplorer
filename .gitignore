@@ -30,3 +30,4 @@ demo/apk/
 local.properties
 keystore.properties
 app/google-services.json
+*.jks

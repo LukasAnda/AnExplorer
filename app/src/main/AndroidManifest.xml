@@ -107,7 +107,8 @@
                 android:resource="@xml/device_filter" />
 
             <intent-filter>
-                <data android:scheme="${applicationId}" />
+                <data android:scheme="com.tproductions.openit"
+                    tools:ignore="AppLinkUrlError" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -152,7 +153,8 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="sensor"
             android:theme="@style/DocumentsTheme.Note">
-            <intent-filter android:label="Text Viewer">
+            <intent-filter android:label="Text Viewer"
+                tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -316,7 +318,7 @@
             </intent-filter>
         </provider>
 
-        <activity
+        <!--activity
             android:name=".common.WebviewActivity"
             android:theme="@style/DocumentsTheme.Document"
             android:exported="true"
@@ -330,7 +332,7 @@
                     android:host="integrations.cloudrail.com" />
             </intent-filter>
 
-        </activity>
+        </activity-->
 
     </application>
 
