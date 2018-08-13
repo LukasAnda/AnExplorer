@@ -44,9 +44,10 @@ public class CloudConnection {
 
     private static final String TAG = NetworkConnection.class.getSimpleName();
     private static final String ROOT = "/";
-
-    public final static String GOOGLE_DRIVE_REDIRECT_URI = BuildConfig.APPLICATION_ID+":/oauth2redirect";
-    public final static String DROPBOX_REDIRECT_URI = "https://auth.cloudrail.com/"+BuildConfig.APPLICATION_ID;
+    
+    public final static String PACKAGE = "com.tproductions.openit";
+    public final static String GOOGLE_DRIVE_REDIRECT_URI = PACKAGE+":/auth";
+    public final static String DROPBOX_REDIRECT_URI = "https://auth.cloudrail.com/"+PACKAGE;
 
     public CloudStorage cloudStorage;
     public CloudFile file;
