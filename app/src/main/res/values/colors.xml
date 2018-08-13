@@ -100,4 +100,5 @@
     <color name="item_connection_cloud">#455A64</color>
 
     <color name="material_black_protected">#88000000</color>
+    <color name="ic_launcher_background">#ffffff</color>
 </resources>

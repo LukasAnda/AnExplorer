@@ -36,8 +36,8 @@
         android:name=".DocumentsApplication"
         android:allowBackup="true"
         android:banner="@drawable/banner"
-        android:icon="@drawable/ic_launcher"
-        android:roundIcon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/name"
         tools:replace="android:label"
         android:supportsRtl="true">
