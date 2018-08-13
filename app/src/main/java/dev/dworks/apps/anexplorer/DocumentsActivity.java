@@ -324,6 +324,10 @@ public class DocumentsActivity extends BaseActivity {
             requestStoragePermissions();
         }
         checkLatestVersion();
+    
+        if(!Utils.isOtherBuild() && !isTelevision()){
+            AppRate.with(this, mRateContainer).listener(mOnShowListener).checkAndShow();
+        }
     }
 
     private void checkLatestVersion() {
@@ -1350,10 +1354,6 @@ public class DocumentsActivity extends BaseActivity {
         updateActionBar();
         invalidateMenu();
         dumpStack();
-
-        if(!Utils.isOtherBuild() && !isTelevision()){
-            AppRate.with(this, mRateContainer).listener(mOnShowListener).checkAndShow();
-        }
     }
 
     private AppRate.OnShowListener mOnShowListener = new AppRate.OnShowListener() {
