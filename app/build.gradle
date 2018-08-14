@@ -135,6 +135,7 @@ dependencies {
     freeImplementation "com.google.firebase:firebase-ads:15.0.1"
     freeImplementation 'com.anjlab.android.iab.v3:library:1.0.44'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:+'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
 }
 
 android.signingConfigs.release.storeFile rootProject.file(props.keyStore)

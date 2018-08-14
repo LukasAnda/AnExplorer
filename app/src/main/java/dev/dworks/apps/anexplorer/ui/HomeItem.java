@@ -63,7 +63,7 @@ public class HomeItem extends FrameLayout {
 
     public void setInfo(RootInfo root) {
 
-        icon.setImageDrawable(root.loadDrawerIcon(mContext));
+        icon.setImageDrawable(root.loadIcon(mContext));
         title.setText(root.title);
 
         // Show available space if no summary

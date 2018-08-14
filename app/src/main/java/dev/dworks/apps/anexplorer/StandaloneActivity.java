@@ -136,7 +136,7 @@ public class StandaloneActivity extends BaseActivity {
                 android.R.style.TextAppearance_DeviceDefault_Widget_ActionBar_Title);
         mToolbarStack = (Spinner) findViewById(R.id.stack);
         mToolbarStack.setOnItemSelectedListener(mStackListener);
-        mRootsToolbar = (Toolbar) findViewById(R.id.roots_toolbar);
+        //mRootsToolbar = (Toolbar) findViewById(R.id.roots_toolbar);
         if (mRootsToolbar != null) {
             mRootsToolbar.setTitleTextAppearance(context,
                     android.R.style.TextAppearance_DeviceDefault_Widget_ActionBar_Title);

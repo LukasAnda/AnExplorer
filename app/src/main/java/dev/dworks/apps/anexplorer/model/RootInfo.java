@@ -77,6 +77,7 @@ public class RootInfo implements Durable, Parcelable {
     public String derivedPackageName;
     public String[] derivedMimeTypes;
     public int derivedIcon;
+    public int drawerIcon;
     public int derivedColor;
     public String derivedTag;
 
@@ -102,6 +103,7 @@ public class RootInfo implements Durable, Parcelable {
         derivedMimeTypes = null;
         derivedIcon = 0;
         derivedColor = 0;
+        drawerIcon = 0;
     }
 
     @Override
@@ -192,95 +194,123 @@ public class RootInfo implements Durable, Parcelable {
         // TODO: remove these special case icons
         if (isInternalStorage()) {
             derivedIcon = R.drawable.ic_root_internal;
+            drawerIcon = R.drawable.ic_root_internal_white;
             derivedTag = "storage";
         } else if (isExternalStorage()) {
             derivedIcon = R.drawable.ic_root_sdcard;
+            drawerIcon = R.drawable.ic_root_sdcard_white;
             derivedTag = "external_storage";
         } else if (isRootedStorage()) {
             derivedIcon = R.drawable.ic_root_root;
+            drawerIcon = R.drawable.ic_root_root_white;
             derivedTag = "root";
         } else if (isPhoneStorage()) {
             derivedIcon = R.drawable.ic_root_phone;
+            drawerIcon = R.drawable.ic_root_phone_white;
             derivedTag = "phone";
         } else if (isSecondaryStorage()) {
             derivedIcon = R.drawable.ic_root_sdcard;
+            drawerIcon = R.drawable.ic_root_sdcard_white;
             if (isSecondaryStorageUSB()) {
 	            derivedIcon = R.drawable.ic_root_usb;
+	            drawerIcon = R.drawable.ic_root_usb_white;
 	        } else if (isSecondaryStorageHDD()) {
 	            derivedIcon = R.drawable.ic_root_hdd;
+	            drawerIcon = R.drawable.ic_root_hdd_white;
 	        }
             derivedTag = "secondary_storage";
         } else if (isUsbStorage()) {
             derivedIcon = R.drawable.ic_root_usb;
+            drawerIcon = R.drawable.ic_root_usb_white;
             derivedTag = "usb_storage";
         } else if (isDownloadsFolder()) {
             derivedIcon = R.drawable.ic_root_download;
+            drawerIcon = R.drawable.ic_root_download_white;
             derivedTag = "downloads";
         } else if (isBluetoothFolder()) {
             derivedIcon = R.drawable.ic_root_bluetooth;
+            drawerIcon = R.drawable.ic_root_bluetooth_white;
             derivedTag = "bluetooth";
         } else if (isAppBackupFolder()) {
             derivedIcon = R.drawable.ic_root_appbackup;
+            drawerIcon = R.drawable.ic_root_appbackup_white;
             derivedTag = "appbackup";
         } else if (isBookmarkFolder()) {
             derivedIcon = R.drawable.ic_root_bookmark;
+            drawerIcon = R.drawable.ic_root_bookmark_white;
             derivedTag = "bookmark";
         } else if (isHiddenFolder()) {
             derivedIcon = R.drawable.ic_root_hidden;
+            drawerIcon = R.drawable.ic_root_hidden_white;
             derivedTag = "hidden";
         } else if (isDownloads()) {
             derivedIcon = R.drawable.ic_root_download;
+            drawerIcon = R.drawable.ic_root_download_white;
             derivedTag = "downloads";
         } else if (isImages()) {
             derivedIcon = R.drawable.ic_root_image;
+            drawerIcon = R.drawable.ic_root_image_white;
             derivedColor = R.color.item_doc_image;
             derivedTag = "images";
         } else if (isVideos()) {
             derivedIcon = R.drawable.ic_root_video;
+            drawerIcon = R.drawable.ic_root_video_white;
             derivedColor = R.color.item_doc_video;
             derivedTag = "videos";
         } else if (isAudio()) {
             derivedIcon = R.drawable.ic_root_audio;
+            drawerIcon = R.drawable.ic_root_audio_white;
             derivedColor = R.color.item_doc_audio;
             derivedTag = "audio";
         } else if (isDocument()) {
             derivedIcon = R.drawable.ic_root_document;
+            drawerIcon = R.drawable.ic_root_document_white;
             derivedColor = R.color.item_doc_pdf;
             derivedTag = "document";
         } else if (isArchive()) {
             derivedIcon = R.drawable.ic_root_archive;
+            drawerIcon = R.drawable.ic_root_archive_white;
             derivedColor = R.color.item_doc_compressed;
             derivedTag = "archive";
         } else if (isApk()) {
             derivedIcon = R.drawable.ic_root_apk;
+            drawerIcon = R.drawable.ic_root_apk_white;
             derivedColor = R.color.item_doc_apk;
             derivedTag = "apk";
         } else if (isUserApp()) {
             derivedIcon = R.drawable.ic_root_apps;
+            drawerIcon = R.drawable.ic_root_apps_white;
             derivedColor = R.color.item_doc_apps;
             derivedTag = "user_apps";
         } else if (isSystemApp()) {
             derivedIcon = R.drawable.ic_root_system_apps;
+            drawerIcon = R.drawable.ic_root_system_apps_white;
             derivedColor = R.color.item_doc_apps;
             derivedTag = "system_apps";
         } else if (isAppProcess()) {
             derivedIcon = R.drawable.ic_root_process;
+            drawerIcon = R.drawable.ic_root_process_white;
             derivedTag = "process";
         } else if (isRecents()) {
             derivedIcon = R.drawable.ic_root_recent;
+            drawerIcon = R.drawable.ic_root_recent_white;
             derivedTag = "recent";
         } else if (isHome()) {
             derivedIcon = R.drawable.ic_root_home;
+            drawerIcon = R.drawable.ic_root_home_white;
             derivedTag = "home";
         } else if (isConnections()) {
             derivedIcon = R.drawable.ic_root_connections;
+            drawerIcon = R.drawable.ic_root_connections_white;
             derivedTag = "connections";
         } else if (isServerStorage()) {
             derivedIcon = R.drawable.ic_root_server;
+            drawerIcon = R.drawable.ic_root_server_white;
             derivedColor = R.color.item_connection_server;
             derivedTag = "server";
         } else if (isNetworkStorage()) {
             derivedIcon = R.drawable.ic_root_network;
+            drawerIcon = R.drawable.ic_root_network_white;
             derivedColor = R.color.item_connection_client;
             derivedTag = "network";
         } else if (isCloudStorage()) {
@@ -295,6 +325,7 @@ public class RootInfo implements Durable, Parcelable {
             } else {
                 derivedIcon = R.drawable.ic_root_cloud;
             }
+            drawerIcon = derivedIcon;
             derivedColor = R.color.item_connection_cloud;
             derivedTag = "cloud";
         }
@@ -537,9 +568,10 @@ public class RootInfo implements Durable, Parcelable {
     }
 
     public Drawable loadDrawerIcon(Context context) {
-        if (derivedIcon != 0) {
-            return IconUtils.applyTintAttr(context, derivedIcon,
-                    android.R.attr.textColorPrimary);
+        if (drawerIcon != 0) {
+//            return IconUtils.applyTintAttr(context, derivedIcon,
+//                    android.R.attr.textColorPrimary);
+            return ContextCompat.getDrawable(context,drawerIcon);
         } else {
             return IconUtils.loadPackageIcon(context, authority, icon);
         }

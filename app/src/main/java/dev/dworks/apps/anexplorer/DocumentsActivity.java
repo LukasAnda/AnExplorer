@@ -164,7 +164,7 @@ public class DocumentsActivity extends BaseActivity {
     private static final int UPLOAD_FILE = 99;
 
     private static final int CODE_FORWARD = 42;
-    private static final int CODE_SETTINGS = 92;
+    public static final int CODE_SETTINGS = 92;
 
     private boolean mShowAsDialog;
 
@@ -843,7 +843,7 @@ public class DocumentsActivity extends BaseActivity {
         final MenuItem sortSize = menu.findItem(R.id.menu_sort_size);
         final MenuItem grid = menu.findItem(R.id.menu_grid);
         final MenuItem list = menu.findItem(R.id.menu_list);
-        final MenuItem settings = menu.findItem(R.id.menu_settings);
+        //final MenuItem settings = menu.findItem(R.id.menu_settings);
 
         // Open drawer means we hide most actions
         if (isRootsDrawerOpen()) {
@@ -908,7 +908,7 @@ public class DocumentsActivity extends BaseActivity {
         // TODO: close any search in-progress when hiding
         search.setVisible(searchVisible);
 
-        settings.setVisible(mState.action != ACTION_MANAGE);
+        //settings.setVisible(mState.action != ACTION_MANAGE);
     }
 
     @Override
@@ -965,10 +965,10 @@ public class DocumentsActivity extends BaseActivity {
             params.putString("type", "list");
             AnalyticsManager.logEvent("display_list", params);
             return true;
-        } else if (id == R.id.menu_settings) {
-            startActivityForResult(new Intent(this, SettingsActivity.class), CODE_SETTINGS);
-            AnalyticsManager.logEvent("setting_open");
-            return true;
+//        } else if (id == R.id.menu_settings) {
+//            startActivityForResult(new Intent(this, SettingsActivity.class), CODE_SETTINGS);
+//            AnalyticsManager.logEvent("setting_open");
+//            return true;
         } else if (id == R.id.menu_about) {
             startActivity(new Intent(this, AboutActivity.class));
             AnalyticsManager.logEvent("about_open");
