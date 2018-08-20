@@ -457,7 +457,7 @@ public class IconUtils {
         return applyTintList(context, drawableId, outValue.resourceId);
     }
 
-    private static Drawable getDrawable(Context context, int drawableId){
+    public static Drawable getDrawable(Context context, int drawableId){
         try {
             return ContextCompat.getDrawable(context, drawableId);
         } catch (Resources.NotFoundException e){
