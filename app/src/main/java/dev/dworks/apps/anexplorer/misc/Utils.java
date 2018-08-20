@@ -70,7 +70,7 @@ import static android.service.quicksettings.TileService.ACTION_QS_TILE_PREFERENC
 public class Utils {
 
     public static final long KB_IN_BYTES = 1024;
-    public static final String INTERSTITIAL_APP_UNIT_ID = "ca-app-pub-6407484780907805/9134520474";
+    public static final String INTERSTITIAL_APP_UNIT_ID = "ca-app-pub-7921725136909046/3994763218";
 
     public static final String DIRECTORY_APPBACKUP = "AppBackup";
 
@@ -534,8 +534,8 @@ public class Utils {
     public static void openFeedback(Activity activity){
         ShareCompat.IntentBuilder
                 .from(activity)
-                .setEmailTo(new String[]{"hakr@dworks.in"})
-                .setSubject("AnExplorer Feedback" + getSuffix())
+                .setEmailTo(new String[]{"openittheapp@gmail.com"})
+                .setSubject("Open it! Feedback" + getSuffix())
                 .setType("text/email")
                 .setChooserTitle("Send Feedback")
                 .startChooser();

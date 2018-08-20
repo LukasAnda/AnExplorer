@@ -124,15 +124,15 @@ public class AboutActivity extends AboutFlavour implements View.OnClickListener 
 		switch (view.getId()) {
 			case R.id.action_github:
 				startActivity(new Intent("android.intent.action.VIEW",
-						Uri.parse("https://github.com/DWorkS")));
+						Uri.parse("https://github.com/LukasAnda")));
 				break;
 			case R.id.action_gplus:
 				startActivity(new Intent("android.intent.action.VIEW",
-						Uri.parse("https://plus.google.com/+HariKrishnaDulipudi")));
+						Uri.parse("https://plus.google.com/103502441071852490665")));
 				break;
 			case R.id.action_twitter:
 				startActivity(new Intent("android.intent.action.VIEW",
-						Uri.parse("https://twitter.com/1HaKr")));
+						Uri.parse("https://twitter.com/lukas_anda")));
 				break;
 			case R.id.action_feedback:
 				openFeedback(this);
@@ -163,7 +163,7 @@ public class AboutActivity extends AboutFlavour implements View.OnClickListener 
 						.from(this)
 						.setText(shareText)
 						.setType("text/plain")
-						.setChooserTitle("Share AnExplorer")
+						.setChooserTitle("Share Open it!")
 						.startChooser();
 				AnalyticsManager.logEvent("app_share");
 				break;
