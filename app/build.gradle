@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/'}
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.11.2'
+    }
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
+
 apply plugin: 'com.android.application'
+
 
 def props = new Properties()
 File keystoreProperties = rootProject.file("keystore.properties")
@@ -35,6 +50,11 @@ android {
         buildConfigField "String", "BOX_CLIENT_KEY",  "$props.BOX_CLIENT_KEY"
         buildConfigField "String", "PLAYSTORE_LICENSE_KEY",  "$props.PLAYSTORE_LICENSE_KEY"
         buildConfigField "String", "MERCHANT_ID",  "$props.MERCHANT_ID"
+
+        manifestPlaceholders = [
+                onesignal_app_id: "ece1c165-3716-46d6-95f6-eb8df048b331",
+                onesignal_google_project_number: 'REMOTE'
+        ]
 
         multiDexEnabled true
 
@@ -139,6 +159,8 @@ dependencies {
     implementation 'me.grantland:autofittextview:0.2.1'
 
     implementation 'com.romandanylyk:pageindicatorview:1.0.1'
+
+    implementation 'com.onesignal:OneSignal:3.9.2'
 
     freeImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
     freeImplementation "com.google.firebase:firebase-core:16.0.1"

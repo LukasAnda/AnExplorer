@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.text.format.DateUtils;
 
 import com.cloudrail.si.CloudRail;
+import com.onesignal.OneSignal;
 
 import dev.dworks.apps.anexplorer.misc.AnalyticsManager;
 import dev.dworks.apps.anexplorer.misc.ContentProviderClientCompat;
@@ -123,6 +124,11 @@ public class DocumentsApplication extends AppFlavour {
         if(isTelevision && Integer.valueOf(SettingsActivity.getThemeStyle()) != AppCompatDelegate.MODE_NIGHT_YES){
             SettingsActivity.setThemeStyle(AppCompatDelegate.MODE_NIGHT_YES);
         }
+    
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
     }
 
     public static synchronized DocumentsApplication getInstance() {
