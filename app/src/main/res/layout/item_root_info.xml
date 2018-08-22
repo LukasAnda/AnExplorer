@@ -2,13 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="184dp"
+    android:minHeight="200dp"
     android:orientation="vertical">
 
     <dev.dworks.apps.anexplorer.ui.HomeItem
         android:id="@+id/homeItem"
         android:layout_width="match_parent"
-        android:minHeight="184dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

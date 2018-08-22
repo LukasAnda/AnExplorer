@@ -120,8 +120,8 @@ public class HomeItem extends FrameLayout {
         loadPieSlice(rootInfo,"Audio: ",storageInfo.audioSize,R.id.item2,R.color.accent_purple);
         loadPieSlice(rootInfo, "Video: ", storageInfo.videoSize, R.id.item3, R.color.accent_cyan);
         loadPieSlice(rootInfo, "Docs: ", storageInfo.textSize, R.id.item4, R.color.accent_teal);
-        loadPieSlice(rootInfo, "Other: ", otherUsed, R.id.item5, R.color.accent_green);
-        loadPieSlice(rootInfo, "Free: ", rootInfo.availableBytes, R.id.item6, R.color.accent_amber);
+        loadPieSlice(rootInfo, "Other: ", otherUsed, R.id.item5, R.color.accent_amber);
+        loadPieSlice(rootInfo, "Free: ", rootInfo.availableBytes, R.id.item6, R.color.accent_green);
     }
     
     @SuppressLint("ResourceAsColor")
