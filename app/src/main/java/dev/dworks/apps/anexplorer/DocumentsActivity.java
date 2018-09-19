@@ -217,7 +217,7 @@ public class DocumentsActivity extends BaseActivity {
         
         ConsentSDK consentSDK = new ConsentSDK.Builder(this)
                 .addCustomLogTag("CUSTOM_TAG") // Add custom tag default: ID_LOG
-                .addPrivacyPolicy("https://www.google.com/") // Add your privacy policy url
+                .addPrivacyPolicy("https://github.com/LukasAnda/Open-it/blob/dev/privacy_policy.html") // Add your privacy policy url
                 .addPublisherId("pub-7921725136909046") // Add your admob publisher id
                 .build();
         
