@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.ayoubfletcher.consentsdk.ConsentSDK;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -112,7 +113,7 @@ public class AdWrapper extends FrameLayout {
         //Fixes GPS AIOB Exception
         try {
             if(null != mAdView){
-                mAdView.loadAd(new AdRequest.Builder().build());
+                mAdView.loadAd(ConsentSDK.getAdRequest(getContext()));
             }
         } catch (Exception e){
             CrashReportingManager.logException(e);
