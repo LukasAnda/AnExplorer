@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.ayoubfletcher.consentsdk.ConsentSDK;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -55,7 +56,7 @@ public class AdWrapper extends FrameLayout {
     }
 
     public void initInterstitialAd(){
-        mInterstitialAd.setAdUnitId("ca-app-pub-6407484780907805/9134520474");
+        mInterstitialAd.setAdUnitId("ca-app-pub-7921725136909046/3994763218");
         requestNewInterstitial();
     }
 
@@ -112,7 +113,7 @@ public class AdWrapper extends FrameLayout {
         //Fixes GPS AIOB Exception
         try {
             if(null != mAdView){
-                mAdView.loadAd(new AdRequest.Builder().build());
+                mAdView.loadAd(ConsentSDK.getAdRequest(getContext()));
             }
         } catch (Exception e){
             CrashReportingManager.logException(e);

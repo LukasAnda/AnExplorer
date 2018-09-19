@@ -33,8 +33,9 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -135,7 +136,7 @@ public class StandaloneActivity extends BaseActivity {
                 android.R.style.TextAppearance_DeviceDefault_Widget_ActionBar_Title);
         mToolbarStack = (Spinner) findViewById(R.id.stack);
         mToolbarStack.setOnItemSelectedListener(mStackListener);
-        mRootsToolbar = (Toolbar) findViewById(R.id.roots_toolbar);
+        //mRootsToolbar = (Toolbar) findViewById(R.id.roots_toolbar);
         if (mRootsToolbar != null) {
             mRootsToolbar.setTitleTextAppearance(context,
                     android.R.style.TextAppearance_DeviceDefault_Widget_ActionBar_Title);
@@ -561,7 +562,7 @@ public class StandaloneActivity extends BaseActivity {
     }
 
     @Override
-    public void upadateActionItems(AbsListView mCurrentView) {
+    public void upadateActionItems(RecyclerView mCurrentView) {
 
     }
 

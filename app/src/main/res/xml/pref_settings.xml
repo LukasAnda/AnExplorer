@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/pref_header_general">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="fileSize"
+            android:persistent="true"
+            android:title="@string/pref_file_size" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="folderSize"
+            android:title="@string/pref_folder_size" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="fileThumbnail"
+            android:persistent="true"
+            android:title="@string/pref_thumbnail" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="fileHidden"
+            android:persistent="true"
+            android:title="@string/pref_hidden" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="recentMedia"
+            android:persistent="true"
+            android:title="@string/pref_recent_media" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="ThemePreferenceScreen"
+        android:title="@string/pref_header_theme">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/theme_style_names"
+            android:entryValues="@array/theme_style_values"
+            android:key="themeStyle"
+            android:persistent="true"
+            android:summary="%s"
+            android:title="@string/pref_theme_style_title" />
+
+        <dev.dworks.apps.anexplorer.ui.MaterialColorPreference
+            android:defaultValue="@color/primaryColor"
+            android:dialogTitle="@string/pref_foreground_color_title"
+            android:key="primaryColor"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_foreground_color_description"
+            android:title="@string/pref_foreground_color_title"
+            app:color_type="primary"
+            app:itemLayout="@layout/pref_layout_color" />
+
+        <dev.dworks.apps.anexplorer.ui.MaterialColorPreference
+            android:defaultValue="@color/accentColor"
+            android:dialogTitle="@string/pref_foreground_color_title"
+            android:key="accentColor"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_accent_color_description"
+            android:title="@string/pref_accent_color_title"
+            app:color_type="accent"
+            app:itemLayout="@layout/pref_layout_color" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_header_security">
+        <CheckBoxPreference
+            android:key="pin_enable"
+            android:summary="@string/pref_description_pin_enable"
+            android:title="@string/pref_title_pin_enable" />
+
+        <Preference
+            android:dependency="pin_enable"
+            android:key="pin_set"
+            android:summary="@string/pref_default_pin_set"
+            android:title="@string/pref_title_pin_set" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_header_advanced">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="advancedDevices"
+            android:persistent="true"
+            android:title="@string/pref_advanced_devices" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="rootMode"
+            android:persistent="true"
+            android:title="@string/pref_root_mode" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="folderAnimations"
+            android:persistent="true"
+            android:title="@string/pref_folder_animations" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

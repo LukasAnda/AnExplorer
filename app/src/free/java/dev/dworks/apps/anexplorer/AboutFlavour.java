@@ -2,6 +2,7 @@ package dev.dworks.apps.anexplorer;
 
 import android.widget.Toast;
 
+import com.ayoubfletcher.consentsdk.ConsentSDK;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -28,7 +29,7 @@ public abstract class AboutFlavour extends ActionBarActivity {
 
     protected void loadAd(){
         if(null != mInterstitialAd) {
-            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            mInterstitialAd.loadAd(ConsentSDK.getAdRequest(this));
         }
     }
 

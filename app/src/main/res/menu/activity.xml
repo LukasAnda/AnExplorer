@@ -35,7 +35,7 @@
         android:visible="false"/>
     <item
         android:id="@+id/menu_search"
-        support:actionViewClass="android.support.v7.widget.SearchView"
+        support:actionViewClass="androidx.appcompat.widget.SearchView"
         android:icon="@drawable/abc_ic_search_api_material"
         support:showAsAction="ifRoom|collapseActionView"
         android:title="@string/menu_search"
@@ -70,11 +70,6 @@
                 android:title="@string/sort_size"/>
         </menu>
     </item>
-    <item
-        android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_menu_settings"
-        support:showAsAction="never"
-        android:title="@string/menu_settings"/>
     <item
         android:id="@+id/menu_about"
         android:icon="@drawable/ic_dialog_info"

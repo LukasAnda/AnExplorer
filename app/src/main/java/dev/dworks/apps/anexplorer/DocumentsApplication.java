@@ -18,7 +18,6 @@
 package dev.dworks.apps.anexplorer;
 
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -28,10 +27,12 @@ import android.content.IntentFilter;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.collection.ArrayMap;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.text.format.DateUtils;
 
 import com.cloudrail.si.CloudRail;
+import com.onesignal.OneSignal;
 
 import dev.dworks.apps.anexplorer.misc.AnalyticsManager;
 import dev.dworks.apps.anexplorer.misc.ContentProviderClientCompat;
@@ -51,27 +52,31 @@ public class DocumentsApplication extends AppFlavour {
     }
 
     private RootsCache mRoots;
+    private ArrayMap<Integer, Long> mSizes = new ArrayMap<Integer, Long>();
     private SAFManager mSAFManager;
     private Point mThumbnailsSize;
-    private ThumbnailCache mThumbnails;
+    private ThumbnailCache mThumbnailCache;
     private static boolean isTelevision;
 
     public static RootsCache getRootsCache(Context context) {
         return ((DocumentsApplication) context.getApplicationContext()).mRoots;
     }
 
+    public static ArrayMap<Integer, Long> getFolderSizes() {
+        return getInstance().mSizes;
+    }
+
     public static SAFManager getSAFManager(Context context) {
         return ((DocumentsApplication) context.getApplicationContext()).mSAFManager;
     }
 
-    public static ThumbnailCache getThumbnailsCache(Context context, Point size) {
+    public static ThumbnailCache getThumbnailCache(Context context) {
         final DocumentsApplication app = (DocumentsApplication) context.getApplicationContext();
-        final ThumbnailCache thumbnails = app.mThumbnails;
-        if (!size.equals(app.mThumbnailsSize)) {
-            thumbnails.evictAll();
-            app.mThumbnailsSize = size;
-        }
-        return thumbnails;
+        return app.mThumbnailCache;
+    }
+
+    public static ThumbnailCache getThumbnailsCache(Context context, Point size) {
+        return getThumbnailCache(context);
     }
 
     public static ContentProviderClient acquireUnstableProviderOrThrow(
@@ -101,7 +106,7 @@ public class DocumentsApplication extends AppFlavour {
 
         mSAFManager = new SAFManager(this);
 
-        mThumbnails = new ThumbnailCache(memoryClassBytes / 4);
+        mThumbnailCache = new ThumbnailCache(memoryClassBytes / 4);
 
         final IntentFilter packageFilter = new IntentFilter();
         packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
@@ -119,6 +124,11 @@ public class DocumentsApplication extends AppFlavour {
         if(isTelevision && Integer.valueOf(SettingsActivity.getThemeStyle()) != AppCompatDelegate.MODE_NIGHT_YES){
             SettingsActivity.setThemeStyle(AppCompatDelegate.MODE_NIGHT_YES);
         }
+    
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
     }
 
     public static synchronized DocumentsApplication getInstance() {
@@ -128,12 +138,7 @@ public class DocumentsApplication extends AppFlavour {
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-
-        if (level >= TRIM_MEMORY_MODERATE) {
-            mThumbnails.evictAll();
-        } else if (level >= TRIM_MEMORY_BACKGROUND) {
-            mThumbnails.trimToSize(mThumbnails.size() / 2);
-        }
+        mThumbnailCache.onTrimMemory(level);
     }
 
     private BroadcastReceiver mCacheReceiver = new BroadcastReceiver() {

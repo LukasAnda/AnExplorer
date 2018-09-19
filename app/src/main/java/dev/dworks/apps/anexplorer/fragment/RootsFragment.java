@@ -29,12 +29,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -52,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
+import androidx.appcompat.app.AlertDialog;
 import dev.dworks.apps.anexplorer.BaseActivity;
 import dev.dworks.apps.anexplorer.BaseActivity.State;
 import dev.dworks.apps.anexplorer.DialogFragment;
@@ -73,6 +72,7 @@ import dev.dworks.apps.anexplorer.setting.SettingsActivity;
 import dev.dworks.apps.anexplorer.ui.NumberProgressBar;
 
 import static dev.dworks.apps.anexplorer.BaseActivity.State.ACTION_BROWSE;
+import static dev.dworks.apps.anexplorer.DocumentsActivity.CODE_SETTINGS;
 import static dev.dworks.apps.anexplorer.DocumentsApplication.isTelevision;
 import static dev.dworks.apps.anexplorer.R.layout.item_root_spacer;
 
@@ -126,10 +126,10 @@ public class RootsFragment extends Fragment {
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int width = Utils.dpToPx(302);
+        int width = getResources().getDimensionPixelSize(R.dimen.side_navigation_width);
 
         boolean rtl = Utils.isRTL();
-        int leftPadding = rtl ? 10 : 50;
+        int leftPadding = rtl ? 10 : 60;
         int rightPadding = rtl ? 50 : 10;
         int leftWidth = width - Utils.dpToPx(leftPadding);
         int rightWidth = width - Utils.dpToPx(rightPadding);
@@ -140,6 +140,14 @@ public class RootsFragment extends Fragment {
         } else {
             mList.setIndicatorBounds(leftWidth, rightWidth);
         }
+        
+        view.findViewById(R.id.settings_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), CODE_SETTINGS);
+                AnalyticsManager.logEvent("setting_open");
+            }
+        });
         return view;
     }
 
