@@ -20,7 +20,6 @@
     <dimen name="grid_icon_size">72dp</dimen>
     <dimen name="root_icon_size">24dp</dimen>
 
-
     <bool name="show_as_dialog">false</bool>
     <bool name="always_show_summary">false</bool>
 
@@ -29,12 +28,10 @@
     <dimen name="color_grid_circle_size">36dp</dimen>
     <dimen name="color_grid_extra_padding">32dp</dimen>
 
-
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<!-- The max limit of file size that the internal editor can open. Default: 4Mb -->
     <integer name="editor_max_file_size">4194304</integer>
-
 
     <dimen name="grid_width">160dp</dimen>
     <dimen name="grid_height">176dp</dimen>
@@ -72,6 +69,14 @@
     <dimen name="big_spacing">24dp</dimen>
 
     <dimen name="card_padding">8dp</dimen>
-    <dimen name="margin_top">8dp</dimen>
+    <dimen name="header_start_padding">0dp</dimen>
+
+    <dimen name="home_padding">0dp</dimen>
+    <dimen name="home_item_height">60dp</dimen>
+    <dimen name="home_item_padding">10dp</dimen>
+    <integer name="home_span">10</integer>
+    <dimen name="document_list_padding">80dp</dimen>
+    <dimen name="drawer_padding">24dp</dimen>
+    <dimen name="preference_padding">72dp</dimen>
 </resources>
 

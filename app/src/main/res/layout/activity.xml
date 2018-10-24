@@ -13,23 +13,22 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
-
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -47,71 +46,70 @@
                     style="@style/PopupTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
                     android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
                     android:overlapAnchor="true" />
 
             </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
+
+            <FrameLayout
+                android:id="@+id/container_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="8dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <include layout="@layout/directory_layout" />
+            </FrameLayout>
+
+            <include layout="@layout/ads_layout" />
+
+            <FrameLayout
+                android:id="@+id/container_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_50"
+                android:elevation="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drawer_roots"
+            android:layout_width="@dimen/side_navigation_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:elevation="16dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/roots_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:elevation="8dp"
+                android:visibility="gone"
+                app:popupTheme="?attr/actionBarPopupTheme"
+                app:theme="?attr/actionBarTheme" />
+
+            <FrameLayout
+                android:id="@+id/container_roots"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="?android:attr/windowBackground" />
+
+        </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/container_rate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="8dp" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <include layout="@layout/directory_layout" />
-        </FrameLayout>
-
-        <include layout="@layout/ads_layout" />
-
-        <FrameLayout
-            android:id="@+id/container_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/material_grey_50"
-            android:elevation="8dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/drawer_roots"
-        android:layout_width="@dimen/side_navigation_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:elevation="16dp"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
-
-        <!--androidx.appcompat.widget.Toolbar
-            android:id="@+id/roots_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="8dp"
-            android:visibility="gone"
-            app:popupTheme="?attr/actionBarPopupTheme"
-            app:theme="?attr/actionBarTheme" /-->
-
-        <FrameLayout
-            android:id="@+id/container_roots"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:id="@+id/container_info"
+            android:layout_width="@dimen/detail_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
             android:background="?android:attr/windowBackground" />
 
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/container_info"
-        android:layout_width="@dimen/detail_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:background="?android:attr/windowBackground" />
-
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>

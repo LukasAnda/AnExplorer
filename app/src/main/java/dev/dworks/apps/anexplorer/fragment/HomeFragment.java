@@ -18,35 +18,45 @@
 package dev.dworks.apps.anexplorer.fragment;
 
 import android.app.ActivityManager;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.LoaderManager;
-import android.app.ProgressDialog;
+import android.app.Dialog;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Loader;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.GridLayoutManager;
 import dev.dworks.apps.anexplorer.BaseActivity;
 import dev.dworks.apps.anexplorer.DocumentsActivity;
 import dev.dworks.apps.anexplorer.DocumentsApplication;
 import dev.dworks.apps.anexplorer.R;
+import dev.dworks.apps.anexplorer.adapter.CommonInfo;
+import dev.dworks.apps.anexplorer.adapter.HomeAdapter;
+import dev.dworks.apps.anexplorer.common.DialogBuilder;
+import dev.dworks.apps.anexplorer.common.RecyclerFragment;
 import dev.dworks.apps.anexplorer.adapter.RecentsAdapter;
 import dev.dworks.apps.anexplorer.adapter.RootInfoAdapter;
 import dev.dworks.apps.anexplorer.adapter.ShortcutsAdapter;
@@ -54,29 +64,32 @@ import dev.dworks.apps.anexplorer.cursor.LimitCursorWrapper;
 import dev.dworks.apps.anexplorer.loader.RecentLoader;
 import dev.dworks.apps.anexplorer.misc.AnalyticsManager;
 import dev.dworks.apps.anexplorer.misc.AsyncTask;
-import dev.dworks.apps.anexplorer.misc.CrashReportingManager;
 import dev.dworks.apps.anexplorer.misc.IconHelper;
 import dev.dworks.apps.anexplorer.misc.IconUtils;
 import dev.dworks.apps.anexplorer.misc.RootsCache;
 import dev.dworks.apps.anexplorer.misc.Utils;
 import dev.dworks.apps.anexplorer.model.DirectoryResult;
 import dev.dworks.apps.anexplorer.model.DocumentInfo;
+import dev.dworks.apps.anexplorer.model.DocumentsContract;
 import dev.dworks.apps.anexplorer.model.RootInfo;
 import dev.dworks.apps.anexplorer.provider.AppsProvider;
 import dev.dworks.apps.anexplorer.setting.SettingsActivity;
-import dev.dworks.apps.anexplorer.ui.HomeItem;
-import dev.dworks.apps.anexplorer.ui.MaterialProgressDialog;
 
 import static dev.dworks.apps.anexplorer.BaseActivity.State.MODE_GRID;
 import static dev.dworks.apps.anexplorer.DocumentsApplication.isTelevision;
+import static dev.dworks.apps.anexplorer.DocumentsApplication.isWatch;
+import static dev.dworks.apps.anexplorer.adapter.HomeAdapter.TYPE_MAIN;
+import static dev.dworks.apps.anexplorer.adapter.HomeAdapter.TYPE_RECENT;
+import static dev.dworks.apps.anexplorer.adapter.HomeAdapter.TYPE_SHORTCUT;
 import static dev.dworks.apps.anexplorer.misc.AnalyticsManager.FILE_TYPE;
 import static dev.dworks.apps.anexplorer.provider.AppsProvider.getRunningAppProcessInfo;
 
 /**
  * Display home.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItemClickListener {
     public static final String TAG = "HomeFragment";
+    public static final String ROOTS_CHANGED = "android.intent.action.ROOTS_CHANGED";
     private static final int MAX_RECENT_COUNT = isTelevision() ? 20 : 10;
     
     private final int mLoaderId = 42;
@@ -92,9 +105,6 @@ public class HomeFragment extends Fragment {
     private ViewPager mRootsPager;
     private RecentsAdapter mRecentsAdapter;
     private LoaderManager.LoaderCallbacks<DirectoryResult> mCallbacks;
-    private View recents_container;
-    private TextView recents;
-    private ShortcutsAdapter mShortcutsAdapter;
     private RootInfo mHomeRoot;
     //private HomeItem secondayStorageStats;
     //private HomeItem usbStorageStats;
@@ -137,14 +147,19 @@ public class HomeFragment extends Fragment {
         
         roots = DocumentsApplication.getRootsCache(getActivity());
         mHomeRoot = roots.getHomeRoot();
-        showRecents();
-        showData();
     }
     
     @Override
     public void onResume() {
         super.onResume();
-        updateUI();
+        showData();
+        registerReceiver();
+    }
+
+    @Override
+    public void onPause() {
+        unRegisterReceiver();
+        super.onPause();
     }
     
     public void showData() {
@@ -233,7 +248,6 @@ public class HomeFragment extends Fragment {
             
             @Override
             public Loader<DirectoryResult> onCreateLoader(int id, Bundle args) {
-                final RootsCache roots = DocumentsApplication.getRootsCache(getActivity());
                 return new RecentLoader(getActivity(), roots, state);
             }
             
@@ -248,24 +262,90 @@ public class HomeFragment extends Fragment {
                     //recents_container.setVisibility(View.VISIBLE);
                     mRecentsAdapter.swapCursor(new LimitCursorWrapper(result.cursor,
                             MAX_RECENT_COUNT));
+                if(null != result.cursor && result.cursor.getCount() != 0) {
+                    mAdapter.setRecentData(new LimitCursorWrapper(result.cursor, MAX_RECENT_COUNT));
                 }
             }
             
             @Override
             public void onLoaderReset(Loader<DirectoryResult> loader) {
-                mRecentsAdapter.swapCursor(null);
+                mAdapter.setRecentData(null);
             }
         };
-        getLoaderManager().restartLoader(mLoaderId, null, mCallbacks);
+        if(SettingsActivity.getDisplayRecentMedia()) {
+            LoaderManager.getInstance(getActivity()).restartLoader(mLoaderId, null, mCallbacks);
+        }
+    }
+
+    public void reloadData(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showData();
+            }
+        }, 500);
     }
     
     @Override
     public void onDestroy() {
         super.onDestroy();
-        storageTimer.cancel();
-        secondatyStorageTimer.cancel();
-        usbStorageTimer.cancel();
-        processTimer.cancel();
+    }
+
+    @Override
+    public void onItemClick(HomeAdapter.ViewHolder item, View view, int position) {
+        switch (item.commonInfo.type) {
+            case TYPE_MAIN:
+            case TYPE_SHORTCUT:
+                if(item.commonInfo.rootInfo.rootId.equals("clean")){
+                    cleanRAM();
+                } else {
+                    openRoot(item.commonInfo.rootInfo);
+                }
+                break;
+            case TYPE_RECENT:
+                try {
+                    final DocumentInfo documentInfo = ((HomeAdapter.GalleryViewHolder)item).getItem(position);
+                    openDocument(documentInfo);
+                } catch (Exception ignore) {}
+                break;
+        }
+    }
+
+    @Override
+    public void onItemLongClick(HomeAdapter.ViewHolder item, View view, int position) {
+
+    }
+
+    @Override
+    public void onItemViewClick(HomeAdapter.ViewHolder item, View view, int position) {
+        switch (view.getId()) {
+            case R.id.recents:
+                openRoot(roots.getRecentsRoot());
+                break;
+
+            case R.id.action:
+                Bundle params = new Bundle();
+                if(item.commonInfo.rootInfo.isAppProcess()) {
+                    cleanRAM();
+                } else {
+                    Intent intent = new Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS);
+                    if(Utils.isIntentAvailable(getActivity(), intent)) {
+                        getActivity().startActivity(intent);
+                    } else  {
+                        Utils.showSnackBar(getActivity(), "Coming Soon!");
+                    }
+                    AnalyticsManager.logEvent("storage_analyze", params);
+                }
+                break;
+        }
+
+    }
+
+    private void cleanRAM(){
+        Bundle params = new Bundle();
+        new OperationTask(processRoot).execute();
+        AnalyticsManager.logEvent("process_clean", params);
     }
     
     private class OperationTask extends AsyncTask<Void, Void, Boolean> {
@@ -275,12 +355,10 @@ public class HomeFragment extends Fragment {
         private long currentAvailableBytes;
         
         public OperationTask(RootInfo root) {
-            progressDialog = new MaterialProgressDialog(getActivity());
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setColor(SettingsActivity.getAccentColor());
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Cleaning up RAM...");
+            DialogBuilder builder = new DialogBuilder(getActivity());
+            builder.setMessage("Cleaning up RAM...");
+            builder.setIndeterminate(true);
+            progressDialog = builder.create();
             this.root = root;
             currentAvailableBytes = root.availableBytes;
         }
@@ -388,4 +466,53 @@ public class HomeFragment extends Fragment {
         params.putString(FILE_TYPE, type);
         AnalyticsManager.logEvent("open_image_recent", params);
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setListAdapter(mAdapter);
+        showData();
+        if (isResumed()) {
+            setListShown(true);
+        } else {
+            setListShownNoAnimation(true);
+        }
+
+        ((GridLayoutManager)getListView().getLayoutManager()).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                int spanSize = 1;
+                switch (mAdapter.getItem(position).type) {
+                    case TYPE_MAIN:
+                        spanSize = totalSpanSize;
+                        break;
+                    case TYPE_SHORTCUT:
+                        spanSize = isWatch() ? 1 : 2;
+                        break;
+                    case TYPE_RECENT:
+                        spanSize = totalSpanSize;
+                        break;
+                }
+                return spanSize;
+            }
+        });
+    }
+
+    private void registerReceiver() {
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(ROOTS_CHANGED));
+    }
+
+    private void unRegisterReceiver() {
+        if(null != broadcastReceiver) {
+            getActivity().unregisterReceiver(broadcastReceiver);
+        }
+    }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showData();
+        }
+    };
 }
