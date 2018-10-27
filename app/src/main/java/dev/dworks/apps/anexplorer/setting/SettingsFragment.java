@@ -111,7 +111,7 @@ public class SettingsFragment extends PreferenceFragment
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		if(preference.getKey().equals(KEY_SECURITY_ENABLED)) {
 			if (Utils.hasMarshmallow() && securityHelper.isDeviceSecure()) {
-				securityHelper.authenticate("AnExplorer", "Use device pattern to continue");
+				securityHelper.authenticate("Open it!", "Use device pattern to continue");
 			}
 		} else {
 			SettingsActivity.logSettingEvent(preference.getKey());
@@ -163,11 +163,6 @@ public class SettingsFragment extends PreferenceFragment
 		if(Utils.hasLollipop()){
 			dialog.getWindow().setStatusBarColor(statusBarColor);
 		}
-		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
+		toolbar.setNavigationOnClickListener(v -> dialog.dismiss());
 	}
 }

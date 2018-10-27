@@ -17,7 +17,7 @@
         <dev.dworks.apps.anexplorer.ui.MaterialColorPreference
             android:defaultValue="@color/primaryColor"
             android:dialogTitle="@string/pref_foreground_color_title"
-            android:icon="@drawable/dummy_icon"
+            android:icon="@drawable/ic_color"
             android:key="primaryColor"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
@@ -29,7 +29,7 @@
         <dev.dworks.apps.anexplorer.ui.MaterialColorPreference
             android:defaultValue="@color/accentColor"
             android:dialogTitle="@string/pref_foreground_color_title"
-            android:icon="@drawable/dummy_icon"
+            android:icon="@drawable/ic_color"
             android:key="accentColor"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
@@ -51,64 +51,70 @@
 
     <PreferenceCategory
         android:key="pref_storage_options"
-        android:title="Storage Options">
+        android:title="@string/storage_options">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="fileSize"
+            android:persistent="true"
+            android:title="@string/pref_file_size" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/dummy_icon"
+            android:key="folderSize"
+            android:title="@string/pref_folder_size" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="fileThumbnail"
+            android:persistent="true"
+            android:title="@string/pref_thumbnail" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/dummy_icon"
+            android:key="fileHidden"
+            android:persistent="true"
+            android:title="@string/pref_hidden" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="recentMedia"
+            android:persistent="true"
+            android:title="@string/pref_recent_media" />
 
-        <PreferenceScreen
-            android:icon="@drawable/ic_folder_options"
-            android:title="@string/pref_header_general">
-            <SwitchPreference
-                android:defaultValue="true"
-                android:icon="@drawable/dummy_icon"
-                android:key="fileSize"
-                android:persistent="true"
-                android:title="@string/pref_file_size" />
-            <SwitchPreference
-                android:defaultValue="false"
-                android:icon="@drawable/dummy_icon"
-                android:key="folderSize"
-                android:title="@string/pref_folder_size" />
-            <SwitchPreference
-                android:defaultValue="true"
-                android:icon="@drawable/dummy_icon"
-                android:key="fileThumbnail"
-                android:persistent="true"
-                android:title="@string/pref_thumbnail" />
-            <SwitchPreference
-                android:defaultValue="false"
-                android:icon="@drawable/dummy_icon"
-                android:key="fileHidden"
-                android:persistent="true"
-                android:title="@string/pref_hidden" />
-            <SwitchPreference
-                android:defaultValue="true"
-                android:icon="@drawable/dummy_icon"
-                android:key="recentMedia"
-                android:persistent="true"
-                android:title="@string/pref_recent_media" />
-        </PreferenceScreen>
-        <PreferenceScreen
-            android:icon="@drawable/ic_advanced_settings"
-            android:title="@string/pref_header_advanced">
-            <SwitchPreference
-                android:defaultValue="true"
-                android:icon="@drawable/dummy_icon"
-                android:key="advancedDevices"
-                android:persistent="true"
-                android:title="@string/pref_advanced_devices" />
-            <SwitchPreference
-                android:defaultValue="true"
-                android:icon="@drawable/dummy_icon"
-                android:key="rootMode"
-                android:persistent="true"
-                android:title="@string/pref_root_mode" />
-            <SwitchPreference
-                android:defaultValue="true"
-                android:icon="@drawable/dummy_icon"
-                android:key="folderAnimations"
-                android:persistent="true"
-                android:title="@string/pref_folder_animations" />
+        <!--<PreferenceScreen-->
+        <!--android:icon="@drawable/ic_folder_options"-->
+        <!--android:title="@string/pref_header_general">-->
 
-        </PreferenceScreen>
+        <!--</PreferenceScreen>-->
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_advanced_options"
+        android:title="@string/pref_header_advanced">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="advancedDevices"
+            android:persistent="true"
+            android:title="@string/pref_advanced_devices" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="rootMode"
+            android:persistent="true"
+            android:title="@string/pref_root_mode" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="folderAnimations"
+            android:persistent="true"
+            android:title="@string/pref_folder_animations" />
+        <!--<PreferenceScreen-->
+        <!--android:icon="@drawable/ic_advanced_settings"-->
+        <!--android:title="@string/pref_header_advanced">-->
+
+
+        <!--</PreferenceScreen>-->
     </PreferenceCategory>
 
 </PreferenceScreen>

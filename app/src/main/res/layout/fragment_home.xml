@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><!--
      Copyright (C) 2013 The Android Open Source Project
-
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
-
           http://www.apache.org/licenses/LICENSE-2.0
-
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +26,35 @@
         android:orientation="vertical"
         android:visibility="gone">
 
+        <dev.dworks.apps.anexplorer.ui.MaterialProgressBar
+            android:id="@+id/progressBar"
+            style="@style/ListProgress"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_gravity="center"
+            android:indeterminate="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:paddingTop="4dip"
+            android:singleLine="true"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/listContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pager_layout"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="184dp">
@@ -51,14 +76,13 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
-
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
                 android:paddingBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:piv_animationType="scale"
+                app:piv_animationType="drop"
                 app:piv_dynamicCount="true"
                 app:piv_interactiveAnimation="true"
                 app:piv_selectedColor="@color/gray_500"
@@ -68,7 +92,6 @@
                 attrs:piv_radius="8dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <dev.dworks.apps.anexplorer.ui.RecyclerViewPlus
             android:id="@id/recyclerview"
             android:layout_width="match_parent"
@@ -76,10 +99,12 @@
             android:clipToPadding="false"
             android:drawSelectorOnTop="true"
             android:horizontalSpacing="@dimen/grid_item_padding"
+            android:padding="@dimen/home_padding"
             android:scrollbars="vertical"
             app:columnWidth="@dimen/grid_item_height"
             app:span="@integer/home_span"
-            android:padding="@dimen/home_padding"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             app:type="custom" />
 
         <dev.dworks.apps.anexplorer.ui.CompatTextView
@@ -92,6 +117,6 @@
             android:text="No connections yet!"
             android:visibility="gone"
             app:drawableTop="@drawable/ic_empty_file" />
-    </FrameLayout>
+    </LinearLayout>
 
 </dev.dworks.apps.anexplorer.ui.DirectoryView>

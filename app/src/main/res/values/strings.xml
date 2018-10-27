@@ -107,4 +107,5 @@
     <string name="key_recent_media">recentMedia</string>
     <string name="key_theme_style">themeStyle</string>
     <string name="key_primary_color">primaryColor</string>
+    <string name="storage_options">Storage Options</string>
 </resources>

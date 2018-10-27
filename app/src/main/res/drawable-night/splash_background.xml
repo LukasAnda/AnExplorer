@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <color android:color="@color/defaultSplashColor"/>
+        <color android:color="@color/material_blue_grey_800"/>
     </item>
     <item>
         <bitmap
