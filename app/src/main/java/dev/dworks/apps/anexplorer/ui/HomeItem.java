@@ -39,7 +39,6 @@ public class HomeItem extends FrameLayout {
     private ImageView icon;
     private TextView title;
     private TextView summary;
-    private NumberProgressBar progress;
     private int color;
     private int accentColor;
     private ImageView action;

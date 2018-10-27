@@ -1,41 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <PreferenceCategory android:title="@string/pref_header_general">
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="fileSize"
-            android:persistent="true"
-            android:title="@string/pref_file_size" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="folderSize"
-            android:title="@string/pref_folder_size" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="fileThumbnail"
-            android:persistent="true"
-            android:title="@string/pref_thumbnail" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="fileHidden"
-            android:persistent="true"
-            android:title="@string/pref_hidden" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="recentMedia"
-            android:persistent="true"
-            android:title="@string/pref_recent_media" />
-    </PreferenceCategory>
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/menu_settings">
     <PreferenceCategory
-        android:key="ThemePreferenceScreen"
+        android:key="pref_theme"
         android:title="@string/pref_header_theme">
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/theme_style_names"
             android:entryValues="@array/theme_style_values"
+            android:icon="@drawable/ic_theme"
             android:key="themeStyle"
             android:persistent="true"
             android:summary="%s"
@@ -44,6 +17,7 @@
         <dev.dworks.apps.anexplorer.ui.MaterialColorPreference
             android:defaultValue="@color/primaryColor"
             android:dialogTitle="@string/pref_foreground_color_title"
+            android:icon="@drawable/ic_color"
             android:key="primaryColor"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
@@ -55,6 +29,7 @@
         <dev.dworks.apps.anexplorer.ui.MaterialColorPreference
             android:defaultValue="@color/accentColor"
             android:dialogTitle="@string/pref_foreground_color_title"
+            android:icon="@drawable/ic_color"
             android:key="accentColor"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
@@ -62,38 +37,84 @@
             android:title="@string/pref_accent_color_title"
             app:color_type="accent"
             app:itemLayout="@layout/pref_layout_color" />
-
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_header_security">
-        <CheckBoxPreference
-            android:key="pin_enable"
+    <PreferenceCategory
+        android:key="pref_security"
+        android:title="@string/pref_header_security">
+        <SwitchPreference
+            android:icon="@drawable/ic_security"
+            android:key="security_enable"
             android:summary="@string/pref_description_pin_enable"
             android:title="@string/pref_title_pin_enable" />
-
-        <Preference
-            android:dependency="pin_enable"
-            android:key="pin_set"
-            android:summary="@string/pref_default_pin_set"
-            android:title="@string/pref_title_pin_set" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_header_advanced">
-        <CheckBoxPreference
+    <PreferenceCategory
+        android:key="pref_storage_options"
+        android:title="@string/storage_options">
+        <SwitchPreference
             android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="fileSize"
+            android:persistent="true"
+            android:title="@string/pref_file_size" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/dummy_icon"
+            android:key="folderSize"
+            android:title="@string/pref_folder_size" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="fileThumbnail"
+            android:persistent="true"
+            android:title="@string/pref_thumbnail" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/dummy_icon"
+            android:key="fileHidden"
+            android:persistent="true"
+            android:title="@string/pref_hidden" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
+            android:key="recentMedia"
+            android:persistent="true"
+            android:title="@string/pref_recent_media" />
+
+        <!--<PreferenceScreen-->
+        <!--android:icon="@drawable/ic_folder_options"-->
+        <!--android:title="@string/pref_header_general">-->
+
+        <!--</PreferenceScreen>-->
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_advanced_options"
+        android:title="@string/pref_header_advanced">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
             android:key="advancedDevices"
             android:persistent="true"
             android:title="@string/pref_advanced_devices" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
             android:key="rootMode"
             android:persistent="true"
             android:title="@string/pref_root_mode" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
+            android:icon="@drawable/dummy_icon"
             android:key="folderAnimations"
             android:persistent="true"
             android:title="@string/pref_folder_animations" />
+        <!--<PreferenceScreen-->
+        <!--android:icon="@drawable/ic_advanced_settings"-->
+        <!--android:title="@string/pref_header_advanced">-->
+
+
+        <!--</PreferenceScreen>-->
     </PreferenceCategory>
 
 </PreferenceScreen>
