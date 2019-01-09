@@ -137,7 +137,8 @@ public class HomeItem extends FrameLayout {
                 .totalBytes, getContext().getResources().getColor(color)));
         AutofitTextView item = findViewById(itemId);
         item.setText(text + getFormatString(total));
-        item.setCompoundDrawablesRelativeWithIntrinsicBounds(TextDrawable.builder()
+        //TODO fix this somehow to make animation smoother
+        /*item.setCompoundDrawablesRelativeWithIntrinsicBounds(TextDrawable.builder()
                         .beginConfig()
                         .height(Utils.dpToPx(24))
                         .width(Utils.dpToPx(24))
@@ -145,7 +146,7 @@ public class HomeItem extends FrameLayout {
                         .endConfig()
                         .buildRect(100 * total / rootInfo.totalBytes + ""
                                 , getContext().getResources().getColor(color)),
-                null, null, null);
+                null, null, null);*/
         item.setVisibility(VISIBLE);
     }
     

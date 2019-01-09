@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2014 Hari Krishna Dulipudi
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package dev.dworks.apps.anexplorer.fragment;
 
 import android.app.ActivityManager;
@@ -31,22 +14,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rd.PageIndicatorView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.viewpager.widget.ViewPager;
 import dev.dworks.apps.anexplorer.BaseActivity;
 import dev.dworks.apps.anexplorer.DocumentsActivity;
 import dev.dworks.apps.anexplorer.DocumentsApplication;
 import dev.dworks.apps.anexplorer.R;
 import dev.dworks.apps.anexplorer.adapter.CommonInfo;
 import dev.dworks.apps.anexplorer.adapter.HomeAdapter;
+import dev.dworks.apps.anexplorer.adapter.RootInfoAdapter;
 import dev.dworks.apps.anexplorer.common.DialogBuilder;
 import dev.dworks.apps.anexplorer.common.RecyclerFragment;
 import dev.dworks.apps.anexplorer.cursor.LimitCursorWrapper;
@@ -89,6 +77,8 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
     private IconHelper mIconHelper;
     private ArrayList<CommonInfo> mainData;
     private ArrayList<CommonInfo> shortcutsData;
+    private ViewPager mRootsPager;
+    private ConstraintLayout pagerLayout;
     private HomeAdapter mAdapter;
     private RootInfo processRoot;
     private int totalSpanSize;
@@ -107,7 +97,10 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View v =  inflater.inflate(R.layout.fragment_home, container, false);
+        mRootsPager = v.findViewById(R.id.roots_pager);
+        pagerLayout = v.findViewById(R.id.pager_layout);
+        return v;
     }
 
     @Override
@@ -118,7 +111,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
         mActivity = ((BaseActivity) getActivity());
         mIconHelper = new IconHelper(mActivity, MODE_GRID);
         ArrayList<CommonInfo> data = new ArrayList<>();
-        if(null == mAdapter){
+        if (null == mAdapter) {
             mAdapter = new HomeAdapter(getActivity(), data, mIconHelper);
             mAdapter.setOnItemClickListener(this);
         }
@@ -140,7 +133,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
         super.onPause();
     }
 
-    public void showData(){
+    public void showData() {
         roots = DocumentsApplication.getRootsCache(getActivity());
         mIconHelper.setThumbnailsEnabled(mActivity.getDisplayState().showThumbnail);
         getMainData();
@@ -152,38 +145,54 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
         mAdapter.setData(data);
     }
 
-    private void getMainData(){
+    private void getMainData() {
         mainData = new ArrayList<>();
         final RootInfo primaryRoot = roots.getPrimaryRoot();
         final RootInfo secondaryRoot = roots.getSecondaryRoot();
         final RootInfo usbRoot = roots.getUSBRoot();
         final RootInfo deviceRoot = roots.getDeviceRoot();
         processRoot = roots.getProcessRoot();
-        int type = !isWatch() ? TYPE_MAIN : TYPE_SHORTCUT;
-        if(null != primaryRoot){
-            mainData.add(CommonInfo.from(primaryRoot, type));
-        }
-        if(null != secondaryRoot){
-            mainData.add(CommonInfo.from(secondaryRoot, type));
-        }
-        if(null != usbRoot){
-            mainData.add(CommonInfo.from(usbRoot, type));
-        }
-        if(null != deviceRoot && isWatch()){
-            mainData.add(CommonInfo.from(deviceRoot, type));
-        }
-        if(null != processRoot){
-            mainData.add(CommonInfo.from(processRoot, type));
+        if (isWatch()) {
+            int type = TYPE_SHORTCUT;
+            if (null != primaryRoot) {
+                mainData.add(CommonInfo.from(primaryRoot, type));
+            }
+            if (null != secondaryRoot) {
+                mainData.add(CommonInfo.from(secondaryRoot, type));
+            }
+            if (null != usbRoot) {
+                mainData.add(CommonInfo.from(usbRoot, type));
+            }
+            if (null != deviceRoot && isWatch()) {
+                mainData.add(CommonInfo.from(deviceRoot, type));
+            }
+            if (null != processRoot) {
+                mainData.add(CommonInfo.from(processRoot, type));
+            }
+            pagerLayout.setVisibility(View.GONE);
+        } else {
+            ArrayList<RootInfo> availableRoots = new ArrayList<>();
+            if(primaryRoot != null)
+                availableRoots.add(primaryRoot);
+            if(secondaryRoot != null)
+                availableRoots.add(secondaryRoot);
+            if(usbRoot != null)
+                availableRoots.add(usbRoot);
+            if(processRoot != null)
+                availableRoots.add(deviceRoot);
+            RootInfoAdapter adapter = new RootInfoAdapter(getActivity(), availableRoots, this::openRoot);
+            mRootsPager.setAdapter(adapter);
+            mRootsPager.setOffscreenPageLimit(availableRoots.size());
         }
     }
 
-    private void getShortcutsData(){
+    private void getShortcutsData() {
         ArrayList<RootInfo> data = roots.getShortcutsInfo();
         shortcutsData = new ArrayList<>();
-        for (RootInfo root: data) {
+        for (RootInfo root : data) {
             shortcutsData.add(CommonInfo.from(root, TYPE_SHORTCUT));
         }
-        if(isWatch()) {
+        if (isWatch()) {
             RootInfo rootInfo = new RootInfo();
             rootInfo.authority = null;
             rootInfo.rootId = "clean";
@@ -197,7 +206,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
 
     }
 
-    private void getRecentsData(){
+    private void getRecentsData() {
         final BaseActivity.State state = getDisplayState(this);
         mCallbacks = new LoaderManager.LoaderCallbacks<DirectoryResult>() {
 
@@ -210,7 +219,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
             public void onLoadFinished(Loader<DirectoryResult> loader, DirectoryResult result) {
                 if (!isAdded())
                     return;
-                if(null != result.cursor && result.cursor.getCount() != 0) {
+                if (null != result.cursor && result.cursor.getCount() != 0) {
                     mAdapter.setRecentData(new LimitCursorWrapper(result.cursor, MAX_RECENT_COUNT));
                 }
             }
@@ -220,12 +229,12 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
                 mAdapter.setRecentData(null);
             }
         };
-        if(SettingsActivity.getDisplayRecentMedia()) {
+        if (SettingsActivity.getDisplayRecentMedia()) {
             LoaderManager.getInstance(getActivity()).restartLoader(mLoaderId, null, mCallbacks);
         }
     }
 
-    public void reloadData(){
+    public void reloadData() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -245,7 +254,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
         switch (item.commonInfo.type) {
             case TYPE_MAIN:
             case TYPE_SHORTCUT:
-                if(item.commonInfo.rootInfo.rootId.equals("clean")){
+                if (item.commonInfo.rootInfo.rootId.equals("clean")) {
                     cleanRAM();
                 } else {
                     openRoot(item.commonInfo.rootInfo);
@@ -253,9 +262,11 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
                 break;
             case TYPE_RECENT:
                 try {
-                    final DocumentInfo documentInfo = ((HomeAdapter.GalleryViewHolder)item).getItem(position);
+                    final DocumentInfo documentInfo = ((HomeAdapter.GalleryViewHolder) item)
+                            .getItem(position);
                     openDocument(documentInfo);
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                }
                 break;
         }
     }
@@ -274,13 +285,13 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
 
             case R.id.action:
                 Bundle params = new Bundle();
-                if(item.commonInfo.rootInfo.isAppProcess()) {
+                if (item.commonInfo.rootInfo.isAppProcess()) {
                     cleanRAM();
                 } else {
                     Intent intent = new Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS);
-                    if(Utils.isIntentAvailable(getActivity(), intent)) {
+                    if (Utils.isIntentAvailable(getActivity(), intent)) {
                         getActivity().startActivity(intent);
-                    } else  {
+                    } else {
                         Utils.showSnackBar(getActivity(), "Coming Soon!");
                     }
                     AnalyticsManager.logEvent("storage_analyze", params);
@@ -290,7 +301,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
 
     }
 
-    private void cleanRAM(){
+    private void cleanRAM() {
         Bundle params = new Bundle();
         new OperationTask(processRoot).execute();
         AnalyticsManager.logEvent("process_clean", params);
@@ -338,7 +349,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(currentAvailableBytes != 0) {
+                    if (currentAvailableBytes != 0) {
                         long availableBytes = processRoot.availableBytes - currentAvailableBytes;
                         String summaryText = availableBytes <= 0 ? "Already cleaned up!" :
                                 getActivity().getString(R.string.root_available_bytes,
@@ -355,15 +366,17 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
         return ((BaseActivity) fragment.getActivity()).getDisplayState();
     }
 
-    private void openRoot(RootInfo rootInfo){
-        DocumentsActivity activity = ((DocumentsActivity)getActivity());
+    private void openRoot(RootInfo rootInfo) {
+        DocumentsActivity activity = ((DocumentsActivity) getActivity());
         activity.onRootPicked(rootInfo, mHomeRoot);
-        AnalyticsManager.logEvent("open_shortcuts", rootInfo ,new Bundle());
+        AnalyticsManager.logEvent("open_shortcuts", rootInfo, new Bundle());
     }
 
-    public void cleanupMemory(Context context){
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningProcessesList = getRunningAppProcessInfo(context);
+    public void cleanupMemory(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context
+                .ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningProcessesList =
+                getRunningAppProcessInfo(context);
         for (ActivityManager.RunningAppProcessInfo processInfo : runningProcessesList) {
             activityManager.killBackgroundProcesses(processInfo.processName);
         }
@@ -389,7 +402,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
             setListShownNoAnimation(true);
         }
 
-        ((GridLayoutManager)getListView().getLayoutManager()).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        ((GridLayoutManager) getListView().getLayoutManager()).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 int spanSize = 1;
@@ -414,7 +427,7 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
     }
 
     private void unRegisterReceiver() {
-        if(null != broadcastReceiver) {
+        if (null != broadcastReceiver) {
             getActivity().unregisterReceiver(broadcastReceiver);
         }
     }

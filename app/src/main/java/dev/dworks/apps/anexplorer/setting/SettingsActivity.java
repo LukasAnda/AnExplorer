@@ -61,6 +61,7 @@ public class SettingsActivity extends SettingsCommonActivity {
     public static final String KEY_THEME_STYLE = "themeStyle";
     public static final String KEY_FOLDER_ANIMATIONS = "folderAnimations";
     public static final String KEY_RECENT_MEDIA = "recentMedia";
+    public static final String KEY_CONSENT = "consent";
     
     private Resources res;
     private int actionBarColor;

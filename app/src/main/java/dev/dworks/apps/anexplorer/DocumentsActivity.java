@@ -216,26 +216,6 @@ public class DocumentsActivity extends BaseActivity implements MenuItem.OnMenuIt
 */
         super.onCreate(icicle);
         
-        if (!isProVersion()) {
-            
-            ConsentSDK.initDummyBanner(this);
-            
-            ConsentSDK consentSDK = new ConsentSDK.Builder(this)
-                    .addCustomLogTag("CUSTOM_TAG") // Add custom tag default: ID_LOG
-                    .addPrivacyPolicy("https://github" +
-                            ".com/LukasAnda/Open-it/blob/dev/privacy_policy.html") // Add your
-                    // privacy policy url
-                    .addPublisherId("pub-7921725136909046") // Add your admob publisher id
-                    .build();
-            
-            consentSDK.checkConsent(new ConsentSDK.ConsentCallback() {
-                @Override
-                public void onResult(boolean isRequestLocationInEeaOrUnknown) {
-                    // Your code
-                }
-            });
-        }
-        
         mRoots = DocumentsApplication.getRootsCache(this);
         
         setResult(Activity.RESULT_CANCELED);

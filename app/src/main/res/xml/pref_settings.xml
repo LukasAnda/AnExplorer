@@ -109,6 +109,11 @@
             android:key="folderAnimations"
             android:persistent="true"
             android:title="@string/pref_folder_animations" />
+        <Preference
+            android:icon="@drawable/dummy_icon"
+            android:key="consent"
+            android:persistent="true"
+            android:title="Consent" />
         <!--<PreferenceScreen-->
         <!--android:icon="@drawable/ic_advanced_settings"-->
         <!--android:title="@string/pref_header_advanced">-->

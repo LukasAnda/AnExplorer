@@ -17,6 +17,11 @@
 
 package dev.dworks.apps.anexplorer.fragment;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.Loader;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,14 +50,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.app.LoaderManager.LoaderCallbacks;
-import androidx.loader.content.Loader;
 import androidx.appcompat.app.AlertDialog;
 import dev.dworks.apps.anexplorer.BaseActivity;
 import dev.dworks.apps.anexplorer.BaseActivity.State;
+import dev.dworks.apps.anexplorer.DocumentsActivity;
 import dev.dworks.apps.anexplorer.DocumentsApplication;
 import dev.dworks.apps.anexplorer.R;
 import dev.dworks.apps.anexplorer.adapter.RootsExpandableAdapter;
@@ -118,12 +119,12 @@ public class RootsFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.fragment_roots, container, false);
         proWrapper = view.findViewById(R.id.proWrapper);
         title = view.findViewById(android.R.id.title);
-        View headerLayout = view.findViewById(R.id.headerLayout);
+//       View headerLayout = view.findViewById(R.id.headerLayout);
         if(isTelevision()){
             title.setVisibility(View.VISIBLE);
         } else {
-            headerLayout.setVisibility(View.VISIBLE);
-            headerLayout.setBackgroundColor(SettingsActivity.getPrimaryColor());
+//            headerLayout.setVisibility(View.VISIBLE);
+//            headerLayout.setBackgroundColor(SettingsActivity.getPrimaryColor());
         }
         mList = (ExpandableListView) view.findViewById(android.R.id.list);
         mList.setOnChildClickListener(mItemListener);
@@ -145,6 +146,14 @@ public class RootsFragment extends BaseFragment {
         } else {
             mList.setIndicatorBounds(leftWidth, rightWidth);
         }
+
+        view.findViewById(R.id.settings_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), CODE_SETTINGS);
+                AnalyticsManager.logEvent("setting_open");
+            }
+        });
         return view;
     }
 
@@ -215,7 +224,7 @@ public class RootsFragment extends BaseFragment {
         state.showAdvanced = state.forceAdvanced
                 | SettingsActivity.getDisplayAdvancedDevices(context);
         state.rootMode = SettingsActivity.getRootMode(getActivity());
-        
+
         if (state.action == ACTION_BROWSE) {
             mList.setOnItemLongClickListener(mItemLongClickListener);
         } else {
@@ -279,7 +288,7 @@ public class RootsFragment extends BaseFragment {
             final BaseActivity activity = BaseActivity.get(RootsFragment.this);
             final Item item = (Item) mAdapter.getChild(groupPosition, childPosition);
             if (item instanceof RootItem) {
-                    int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
+                int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
                 RootInfo rootInfo = ((RootItem) item).root;
                 if(RootInfo.isProFeature(rootInfo) && !DocumentsApplication.isPurchased()){
@@ -347,20 +356,20 @@ public class RootsFragment extends BaseFragment {
     private void removeBookark(final BookmarkItem item) {
         DialogBuilder builder = new DialogBuilder(getActivity());
         builder.setMessage("Remove bookmark?")
-        .setCancelable(false)
-        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int did) {
-                int rows = getActivity().getContentResolver().delete(ExplorerProvider.buildBookmark(),
-                        ExplorerProvider.BookmarkColumns.PATH + " = ? AND " +
-                                ExplorerProvider.BookmarkColumns.TITLE + " = ? ",
-                        new String[]{item.root.path, item.root.title}
-                );
-                if (rows > 0) {
-                    Utils.showSnackBar(getActivity(), "Bookmark removed");
-                    RootsCache.updateRoots(getActivity(), ExternalStorageProvider.AUTHORITY);
-                }
-            }
-        }).setNegativeButton(android.R.string.cancel, null);
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int did) {
+                        int rows = getActivity().getContentResolver().delete(ExplorerProvider.buildBookmark(),
+                                ExplorerProvider.BookmarkColumns.PATH + " = ? AND " +
+                                        ExplorerProvider.BookmarkColumns.TITLE + " = ? ",
+                                new String[]{item.root.path, item.root.title}
+                        );
+                        if (rows > 0) {
+                            Utils.showSnackBar(getActivity(), "Bookmark removed");
+                            RootsCache.updateRoots(getActivity(), ExternalStorageProvider.AUTHORITY);
+                        }
+                    }
+                }).setNegativeButton(android.R.string.cancel, null);
         builder.showDialog();
     }
 
@@ -436,7 +445,11 @@ public class RootsFragment extends BaseFragment {
             title.setText(root.title);
 
             // Show available space if no summary
-            if(root.isNetworkStorage() || root.isCloudStorage() || root.isApp()) {
+            if(root.isNetworkStorage()) {
+                String summaryText = root.summary;
+                summary.setText(summaryText);
+                summary.setVisibility(TextUtils.isEmpty(summaryText) ? View.GONE : View.VISIBLE);
+            } if(root.isCloudStorage()) {
                 String summaryText = root.summary;
                 summary.setText(summaryText);
                 summary.setVisibility(TextUtils.isEmpty(summaryText) ? View.GONE : View.VISIBLE);

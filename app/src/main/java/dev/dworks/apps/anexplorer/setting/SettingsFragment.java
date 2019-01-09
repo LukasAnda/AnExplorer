@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.ayoubfletcher.consentsdk.ConsentSDK;
 import com.google.android.material.appbar.AppBarLayout;
 
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +28,7 @@ import static dev.dworks.apps.anexplorer.DocumentsApplication.isWatch;
 import static dev.dworks.apps.anexplorer.misc.SecurityHelper.REQUEST_CONFIRM_CREDENTIALS;
 import static dev.dworks.apps.anexplorer.setting.SettingsActivity.KEY_ACCENT_COLOR;
 import static dev.dworks.apps.anexplorer.setting.SettingsActivity.KEY_ADVANCED_DEVICES;
+import static dev.dworks.apps.anexplorer.setting.SettingsActivity.KEY_CONSENT;
 import static dev.dworks.apps.anexplorer.setting.SettingsActivity.KEY_FILE_HIDDEN;
 import static dev.dworks.apps.anexplorer.setting.SettingsActivity.KEY_FILE_SIZE;
 import static dev.dworks.apps.anexplorer.setting.SettingsActivity.KEY_FILE_THUMBNAIL;
@@ -88,11 +90,34 @@ public class SettingsFragment extends PreferenceFragment
 		findPreference(KEY_ADVANCED_DEVICES).setOnPreferenceClickListener(this);
 		findPreference(KEY_ROOT_MODE).setOnPreferenceClickListener(this);
 		findPreference(KEY_FOLDER_ANIMATIONS).setOnPreferenceClickListener(this);
+		findPreference(KEY_CONSENT).setOnPreferenceClickListener(this);
+
+		if(Utils.isProVersion()){
+		    getPreferenceScreen().removePreference(findPreference(KEY_CONSENT));
+        }
 	}
 
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
 		SettingsActivity.logSettingEvent(preference.getKey());
+		if(preference.getKey().equalsIgnoreCase(KEY_CONSENT)){
+			ConsentSDK.initDummyBanner(getActivity());
+
+			ConsentSDK consentSDK = new ConsentSDK.Builder(getActivity())
+					.addCustomLogTag("CUSTOM_TAG") // Add custom tag default: ID_LOG
+					.addPrivacyPolicy("https://github" +
+							".com/LukasAnda/Open-it/blob/dev/privacy_policy.html") // Add your
+					// privacy policy url
+					.addPublisherId("pub-7921725136909046") // Add your admob publisher id
+					.build();
+
+			consentSDK.checkConsent(new ConsentSDK.ConsentCallback() {
+				@Override
+				public void onResult(boolean isRequestLocationInEeaOrUnknown) {
+					// Your code
+				}
+			});
+		}
 		return false;
 	}
 
