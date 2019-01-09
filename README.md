@@ -55,14 +55,14 @@ App Links
 Developed By
 ============
 
-* Hari Krishna Dulipudi - <hakr@dworks.in>
+* Hari Krishna Dulipudi
 * Lukas Anda - <lukas.anda@gmail.com>
 
 
 License
 =======
 
-    Copyright 2014 - 2017 Hari Krishna Dulipudi
+    Copyright 2014 - 2018 Hari Krishna Dulipudi
     Copyright 2017 - 2018 Lukas Anda
 
     Licensed under the Apache License, Version 2.0 (the "License");
