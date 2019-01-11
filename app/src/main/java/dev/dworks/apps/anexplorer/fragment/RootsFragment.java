@@ -441,7 +441,7 @@ public class RootsFragment extends BaseFragment {
             final NumberProgressBar progress = (NumberProgressBar) convertView.findViewById(android.R.id.progress);
 
             final Context context = convertView.getContext();
-            icon.setImageDrawable(root.loadDrawerIcon(context));
+            icon.setImageDrawable(root.loadRootItemIcon(context));
             title.setText(root.title);
 
             // Show available space if no summary

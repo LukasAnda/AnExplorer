@@ -11,8 +11,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.renderer.scatter.SquareShapeRenderer;
-
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,7 +41,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     private Cursor recentCursor;
     private final IconHelper mIconHelper;
 
-    public HomeAdapter(Activity context, ArrayList<CommonInfo> data, IconHelper iconHelper) {
+    public HomeAdapter(Activity context, ArrayList<CommonInfo> data, IconHelper iconHelper){
         mContext = context;
         mData = data;
         mDefaultColor = SettingsActivity.getPrimaryColor();
@@ -86,11 +84,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-//            case TYPE_MAIN: {
-//                View itemView = LayoutInflater.from(parent.getContext())
-//                        .inflate(R.layout.item_home, parent, false);
-//                return new MainViewHolder(itemView);
-//            }
+            case TYPE_MAIN: {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_home, parent, false);
+                return new MainViewHolder(itemView);
+            }
             case TYPE_SHORTCUT: {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_shortcuts, parent, false);
@@ -107,19 +105,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         return new ShortcutViewHolder(itemView);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener){
         onItemClickListener = listener;
     }
 
-    public OnItemClickListener getOnItemClickListener() {
+    public OnItemClickListener getOnItemClickListener(){
         return onItemClickListener;
     }
 
-    public interface OnItemClickListener {
+    public interface OnItemClickListener{
         void onItemClick(ViewHolder item, View view, int position);
-
         void onItemLongClick(ViewHolder item, View view, int position);
-
         void onItemViewClick(ViewHolder item, View view, int position);
     }
 
@@ -139,19 +135,25 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
         public ViewHolder(View v) {
             super(v);
-            v.setOnClickListener(v1 -> {
-                if (null != onItemClickListener) {
-                    onItemClickListener.onItemClick(ViewHolder.this, v1, getLayoutPosition());
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(null != onItemClickListener) {
+                        onItemClickListener.onItemClick(ViewHolder.this, v, getLayoutPosition());
+                    }
                 }
             });
-            v.setOnLongClickListener(v12 -> {
-                if (null != onItemClickListener) {
-                    onItemClickListener.onItemLongClick(ViewHolder.this, v12, getLayoutPosition());
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(null != onItemClickListener) {
+                        onItemClickListener.onItemLongClick(ViewHolder.this, v, getLayoutPosition());
+                    }
+                    return false;
                 }
-                return false;
             });
             icon = (ImageView) v.findViewById(android.R.id.icon);
-            iconBackground = (RoundedSquareImage) v.findViewById(R.id.icon_background);
+            iconBackground = v.findViewById(R.id.icon_background);
             title = (TextView) v.findViewById(android.R.id.title);
 
             card_view = v.findViewById(R.id.card_view);
@@ -171,16 +173,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     public class MainViewHolder extends ViewHolder {
         private final int accentColor;
         private final int color;
-        private int mPosition;
 
         public MainViewHolder(View v) {
             super(v);
             action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null != onItemClickListener) {
-                        onItemClickListener.onItemViewClick(MainViewHolder.this, action,
-                                getLayoutPosition());
+                    if(null != onItemClickListener) {
+                        onItemClickListener.onItemViewClick(MainViewHolder.this, action, getLayoutPosition());
                     }
                 }
             });
@@ -189,73 +189,62 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
 
         @Override
-        public void setData(int position) {
-            mPosition = position;
+        public void setData(int position){
             commonInfo = getItem(position);
             icon.setImageDrawable(commonInfo.rootInfo.loadDrawerIcon(mContext));
             title.setText(commonInfo.rootInfo.title);
             int drawableId = -1;
-            if (commonInfo.rootInfo.isAppProcess()) {
+            if (commonInfo.rootInfo.isAppProcess()){
                 drawableId = R.drawable.ic_clean;
-            } else if (commonInfo.rootInfo.isStorage() && !commonInfo.rootInfo.isSecondaryStorage
-                    ()) {
+            } else if (commonInfo.rootInfo.isStorage()) {
                 drawableId = R.drawable.ic_analyze;
             }
-            if (drawableId != -1) {
+            if(drawableId != -1) {
                 action.setImageDrawable(IconUtils.applyTint(mContext, drawableId, accentColor));
                 action_layout.setVisibility(View.VISIBLE);
             } else {
                 action.setImageDrawable(null);
                 action_layout.setVisibility(View.GONE);
             }
-            // Show available space if no summary
-            String summaryText = commonInfo.rootInfo.summary;
-            if (TextUtils.isEmpty(summaryText) && commonInfo.rootInfo.availableBytes >= 0) {
-                summaryText = mContext.getString(R.string.root_available_bytes,
-                        Formatter.formatFileSize(mContext, commonInfo.rootInfo.availableBytes));
+
+            if (commonInfo.rootInfo.availableBytes >= 0) {
                 try {
-                    Long current = 100 * commonInfo.rootInfo.availableBytes / commonInfo.rootInfo
-                            .totalBytes;
+                    Long current = 100 * commonInfo.rootInfo.availableBytes / commonInfo.rootInfo.totalBytes ;
                     progress.setVisibility(View.VISIBLE);
                     progress.setMax(100);
                     progress.setProgress(100 - current.intValue());
                     progress.setColor(color);
                     animateProgress(progress, commonInfo.rootInfo);
-                } catch (Exception e) {
+                }
+                catch (Exception e){
                     progress.setVisibility(View.GONE);
                 }
-            } else {
+            }
+            else{
                 progress.setVisibility(View.GONE);
             }
-
-            summary.setText(summaryText);
-            summary.setVisibility(TextUtils.isEmpty(summaryText) ? View.GONE : View.VISIBLE);
         }
     }
 
     public class ShortcutViewHolder extends ViewHolder {
-        private int mPosition;
 
         public ShortcutViewHolder(View v) {
             super(v);
         }
 
         @Override
-        public void setData(int position) {
-            mPosition = position;
+        public void setData(int position){
             commonInfo = getItem(position);
-            if (null == commonInfo) {
+            if(null == commonInfo || null == commonInfo.rootInfo){
                 return;
             }
-            iconBackground.setColor(ContextCompat.getColor(mContext, commonInfo.rootInfo
-                    .derivedColor));
+            iconBackground.setColor(ContextCompat.getColor(mContext, commonInfo.rootInfo.derivedColor));
             icon.setImageDrawable(commonInfo.rootInfo.loadShortcutIcon(mContext));
             title.setText(commonInfo.rootInfo.title);
         }
     }
 
     public class GalleryViewHolder extends ViewHolder {
-        private int mPosition;
         private final RecyclerView recyclerview;
         private TextView recents;
         private RecentsAdapter adapter;
@@ -268,54 +257,50 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             recents.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null != onItemClickListener) {
-                        onItemClickListener.onItemViewClick(GalleryViewHolder.this, recents,
-                                getLayoutPosition());
+                    if(null != onItemClickListener) {
+                        onItemClickListener.onItemViewClick(GalleryViewHolder.this, recents, getLayoutPosition());
                     }
                 }
             });
         }
 
         @Override
-        public void setData(int position) {
-            mPosition = position;
+        public void setData(int position){
             commonInfo = CommonInfo.from(recentCursor);
             adapter = new RecentsAdapter(mContext, recentCursor, mIconHelper);
             adapter.setOnItemClickListener(new RecentsAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(RecentsAdapter.ViewHolder item, int position) {
-                    if (null != onItemClickListener) {
-                        onItemClickListener.onItemClick(GalleryViewHolder.this, recyclerview,
-                                position);
+                    if(null != onItemClickListener) {
+                        onItemClickListener.onItemClick(GalleryViewHolder.this, recyclerview, position);
                     }
                 }
             });
             recyclerview.setAdapter(adapter);
         }
 
-        public DocumentInfo getItem(int position) {
+        public DocumentInfo getItem(int position){
             return DocumentInfo.fromDirectoryCursor(adapter.getItem(position));
         }
     }
 
-    public CommonInfo getItem(int position) {
-        if (position < mData.size()) {
+    public CommonInfo getItem(int position){
+        if(position < mData.size()){
             return mData.get(position);
         } else {
             return CommonInfo.from(recentCursor);
         }
     }
 
-    private void animateProgress(final NumberProgressBar item, RootInfo root) {
+    private void animateProgress(final NumberProgressBar item, RootInfo root){
         try {
-            final double percent = (((root.totalBytes - root.availableBytes) / (double) root
-                    .totalBytes) * 100);
+            final double percent = (((root.totalBytes - root.availableBytes) / (double) root.totalBytes) * 100);
             final Timer timer = new Timer();
             item.setProgress(0);
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (Utils.isActivityAlive(mContext)) {
+                    if(Utils.isActivityAlive(mContext)){
                         mContext.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -329,7 +314,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                     }
                 }
             }, 50, 20);
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             item.setVisibility(View.GONE);
             CrashReportingManager.logException(e);
         }

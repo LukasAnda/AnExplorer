@@ -74,7 +74,7 @@
     <string name="download_running_percent">In progress, <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
     <string name="name">Open it! File Explorer</string>
     <string name="app_name">Open it!</string>
-    <string name="app_ver">Another Explorer</string>
+    <string name="app_ver">Open it!</string>
     <string name="app_company">Developed By DWorkS &amp; Lukas Anda</string>
     <string name="app_url">http://gamesbyt.wordpress.com</string>
     <string name="app_about_info">To make a small difference.</string>

@@ -13,7 +13,6 @@
 
 <dev.dworks.apps.anexplorer.ui.DirectoryView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:attrs="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/windowBackground">
@@ -46,51 +45,10 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/listContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pager_layout"
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="184dp">
-
-            <dev.dworks.apps.anexplorer.ui.WrapContentViewPager
-                android:id="@+id/roots_pager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="184dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.rd.PageIndicatorView
-                android:id="@+id/pageIndicatorView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
-                android:paddingBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:piv_animationType="drop"
-                app:piv_dynamicCount="true"
-                app:piv_interactiveAnimation="true"
-                app:piv_selectedColor="@color/gray_500"
-                app:piv_unselectedColor="@color/gray_300"
-                app:piv_viewPager="@id/roots_pager"
-                attrs:piv_padding="12dp"
-                attrs:piv_radius="8dp" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent">
 
         <dev.dworks.apps.anexplorer.ui.RecyclerViewPlus
             android:id="@id/recyclerview"
@@ -99,12 +57,10 @@
             android:clipToPadding="false"
             android:drawSelectorOnTop="true"
             android:horizontalSpacing="@dimen/grid_item_padding"
-            android:padding="@dimen/home_padding"
             android:scrollbars="vertical"
             app:gridColumnWidth="@dimen/grid_item_height"
             app:span="@integer/home_span"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:padding="@dimen/home_padding"
             app:type="custom" />
 
         <dev.dworks.apps.anexplorer.ui.CompatTextView
@@ -117,6 +73,6 @@
             android:text="No connections yet!"
             android:visibility="gone"
             app:drawableTop="@drawable/ic_empty_file" />
-    </LinearLayout>
+    </FrameLayout>
 
 </dev.dworks.apps.anexplorer.ui.DirectoryView>

@@ -57,7 +57,7 @@ import static dev.dworks.apps.anexplorer.model.DocumentInfo.getCursorString;
 @SuppressLint("DefaultLocale")
 public class RootInfo implements Durable, Parcelable {
     @SuppressWarnings("unused")
-	private static final int VERSION_INIT = 1;
+    private static final int VERSION_INIT = 1;
     private static final int VERSION_DROP_TYPE = 2;
 
     public String authority;
@@ -73,7 +73,9 @@ public class RootInfo implements Durable, Parcelable {
     public String path;
     public File visiblePath;
 
-    /** Derived fields that aren't persisted */
+    /**
+     * Derived fields that aren't persisted
+     */
     public String derivedPackageName;
     public String[] derivedMimeTypes;
     public int derivedIcon;
@@ -212,12 +214,12 @@ public class RootInfo implements Durable, Parcelable {
             derivedIcon = R.drawable.ic_root_sdcard;
             drawerIcon = R.drawable.ic_root_sdcard_white;
             if (isUsb() || isSecondaryStorageUSB()) {
-	            derivedIcon = R.drawable.ic_root_usb;
-	            drawerIcon = R.drawable.ic_root_usb_white;
-	        } else if (isSecondaryStorageHDD()) {
-	            derivedIcon = R.drawable.ic_root_hdd;
-	            drawerIcon = R.drawable.ic_root_hdd_white;
-	        }
+                derivedIcon = R.drawable.ic_root_usb;
+                drawerIcon = R.drawable.ic_root_usb_white;
+            } else if (isSecondaryStorageHDD()) {
+                derivedIcon = R.drawable.ic_root_hdd;
+                drawerIcon = R.drawable.ic_root_hdd_white;
+            }
             derivedTag = "secondary_storage";
         } else if (isUsbStorage()) {
             derivedIcon = R.drawable.ic_root_usb;
@@ -372,20 +374,20 @@ public class RootInfo implements Durable, Parcelable {
         return ExternalStorageProvider.AUTHORITY.equals(authority)
                 && ExternalStorageProvider.ROOT_ID_PHONE.equals(rootId);
     }
-    
+
     public boolean isSecondaryStorage() {
         return ExternalStorageProvider.AUTHORITY.equals(authority)
-        		&& rootId.startsWith(ExternalStorageProvider.ROOT_ID_SECONDARY);
+                && rootId.startsWith(ExternalStorageProvider.ROOT_ID_SECONDARY);
     }
 
     public boolean isSecondaryStorageSD() {
         return contains(path, "sd", "card", "emmc") || contains(title, "sd", "card", "emmc");
     }
-    
+
     public boolean isSecondaryStorageUSB() {
         return contains(path, "usb") || contains(title, "usb");
     }
-    
+
     public boolean isSecondaryStorageHDD() {
         return contains(path, "hdd") || contains(title, "hdd");
     }
@@ -414,7 +416,7 @@ public class RootInfo implements Durable, Parcelable {
         return ExternalStorageProvider.AUTHORITY.equals(authority)
                 && ExternalStorageProvider.ROOT_ID_HIDDEN.equals(rootId);
     }
-    
+
     public boolean isDownloads() {
         return DownloadStorageProvider.AUTHORITY.equals(authority);
     }
@@ -452,7 +454,7 @@ public class RootInfo implements Durable, Parcelable {
     public boolean isApp() {
         return AppsProvider.AUTHORITY.equals(authority);
     }
-    
+
     public boolean isAppPackage() {
         return AppsProvider.AUTHORITY.equals(authority)
                 && (AppsProvider.ROOT_ID_USER_APP.equals(rootId)
@@ -468,7 +470,7 @@ public class RootInfo implements Durable, Parcelable {
         return AppsProvider.AUTHORITY.equals(authority)
                 && AppsProvider.ROOT_ID_SYSTEM_APP.equals(rootId);
     }
-    
+
     public boolean isAppProcess() {
         return AppsProvider.AUTHORITY.equals(authority)
                 && AppsProvider.ROOT_ID_PROCESS.equals(rootId);
@@ -495,10 +497,12 @@ public class RootInfo implements Durable, Parcelable {
         return CloudStorageProvider.AUTHORITY.equals(authority)
                 && rootId.startsWith(CloudStorageProvider.TYPE_DROPBOX);
     }
+
     public boolean isCloudOneDrive() {
         return CloudStorageProvider.AUTHORITY.equals(authority)
                 && rootId.startsWith(CloudStorageProvider.TYPE_ONEDRIVE);
     }
+
     public boolean isCloudBox() {
         return CloudStorageProvider.AUTHORITY.equals(authority)
                 && rootId.startsWith(CloudStorageProvider.TYPE_BOX);
@@ -507,7 +511,7 @@ public class RootInfo implements Durable, Parcelable {
     public boolean isUsbStorage() {
         return UsbStorageProvider.AUTHORITY.equals(authority);
     }
-    
+
     public boolean isEditSupported() {
         return (flags & Root.FLAG_SUPPORTS_EDIT) != 0;
     }
@@ -523,21 +527,27 @@ public class RootInfo implements Durable, Parcelable {
     public boolean hasSettings() {
         return (flags & Root.FLAG_HAS_SETTINGS) != 0;
     }
+
     public boolean supportsChildren() {
         return (flags & Root.FLAG_SUPPORTS_IS_CHILD) != 0;
     }
+
     public boolean supportsCreate() {
         return (flags & Root.FLAG_SUPPORTS_CREATE) != 0;
     }
+
     public boolean supportsRecents() {
         return (flags & Root.FLAG_SUPPORTS_RECENTS) != 0;
     }
+
     public boolean supportsSearch() {
         return (flags & Root.FLAG_SUPPORTS_SEARCH) != 0;
     }
+
     public boolean isAdvanced() {
         return (flags & Root.FLAG_ADVANCED) != 0;
     }
+
     public boolean isLocalOnly() {
         return (flags & Root.FLAG_LOCAL_ONLY) != 0;
     }
@@ -569,9 +579,16 @@ public class RootInfo implements Durable, Parcelable {
 
     public Drawable loadDrawerIcon(Context context) {
         if (drawerIcon != 0) {
-//            return IconUtils.applyTintAttr(context, derivedIcon,
-//                    android.R.attr.textColorPrimary);
-            return ContextCompat.getDrawable(context,drawerIcon);
+            return IconUtils.applyTintAttr(context, derivedIcon,
+                    android.R.attr.textColorPrimary);
+        } else {
+            return IconUtils.loadPackageIcon(context, authority, icon);
+        }
+    }
+
+    public Drawable loadRootItemIcon(Context context) {
+        if (drawerIcon != 0) {
+            return ContextCompat.getDrawable(context, drawerIcon);
         } else {
             return IconUtils.loadPackageIcon(context, authority, icon);
         }
@@ -640,9 +657,9 @@ public class RootInfo implements Durable, Parcelable {
      * @return true if path has atleast one tag matched else false
      */
     public boolean contains(String path, String... tags) {
-        if(!TextUtils.isEmpty(path)){
-            for (String tag : tags){
-                if(path.toLowerCase().contains(tag)){
+        if (!TextUtils.isEmpty(path)) {
+            for (String tag : tags) {
+                if (path.toLowerCase().contains(tag)) {
                     return true;
                 }
             }
@@ -664,56 +681,56 @@ public class RootInfo implements Durable, Parcelable {
                 + "}";
     }
 
-    public static boolean isStorage(RootInfo root){
+    public static boolean isStorage(RootInfo root) {
         return root.isHome() || root.isPhoneStorage() || root.isStorage() || root.isUsbStorage();
     }
 
-    public static boolean isLibraryMedia(RootInfo root){
+    public static boolean isLibraryMedia(RootInfo root) {
         return root.isRecents() || root.isImages() || root.isVideos() || root.isAudio();
     }
 
-    public static boolean isLibraryNonMedia(RootInfo root){
+    public static boolean isLibraryNonMedia(RootInfo root) {
         return root.isDocument() || root.isArchive() || root.isApk();
     }
 
-    public static boolean isFolder(RootInfo root){
+    public static boolean isFolder(RootInfo root) {
         return root.isBluetoothFolder() || root.isDownloadsFolder() || root.isDownloads();
     }
 
-    public static boolean isBookmark(RootInfo root){
+    public static boolean isBookmark(RootInfo root) {
         return root.isBookmarkFolder();
     }
 
-    public static boolean isTools(RootInfo root){
+    public static boolean isTools(RootInfo root) {
         return root.isConnections() || root.isRootedStorage() || root.isAppPackage()
                 || root.isAppProcess();
     }
 
-    public static boolean isNetwork(RootInfo root){
+    public static boolean isNetwork(RootInfo root) {
         return root.isNetworkStorage();
     }
 
-    public static boolean isCloud(RootInfo root){
+    public static boolean isCloud(RootInfo root) {
         return root.isCloudStorage();
     }
 
-    public static boolean isApps(RootInfo root){
+    public static boolean isApps(RootInfo root) {
         return root.isAppPackage() || root.isAppProcess();
     }
 
-    public static boolean isOtherRoot(RootInfo root){
+    public static boolean isOtherRoot(RootInfo root) {
         return null != root && (root.isHome() || root.isConnections() || root.isNetworkStorage());
     }
 
-    public static boolean isMedia(RootInfo root){
+    public static boolean isMedia(RootInfo root) {
         return root.isImages() || root.isVideos() || root.isAudio();
     }
 
-    public static boolean isProFeature(RootInfo root){
+    public static boolean isProFeature(RootInfo root) {
         return root.isSecondaryStorage() || root.isUsbStorage() || root.isRootedStorage();
     }
 
-    public static boolean isChromecastFeature(RootInfo root){
+    public static boolean isChromecastFeature(RootInfo root) {
         return RootInfo.isMedia(root) || root.isHome() || root.isStorage();
     }
 
