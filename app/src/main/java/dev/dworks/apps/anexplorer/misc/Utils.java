@@ -44,12 +44,15 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.annotation.IntDef;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -57,6 +60,7 @@ import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.TextUtilsCompat;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
+import dev.dworks.apps.anexplorer.AnalyzeActivity;
 import dev.dworks.apps.anexplorer.BuildConfig;
 import dev.dworks.apps.anexplorer.DocumentsApplication;
 import dev.dworks.apps.anexplorer.common.ActionBarActivity;
@@ -585,5 +589,34 @@ public class Utils extends UtilsFlavour{
 
     public static boolean checkUSBDevices() {
         return !hasNougat() || DocumentsApplication.isTelevision();
+    }
+
+    public static void animateProgress(Activity activity, double max, int period,  TextAnimationInterface listener){
+        try {
+            final double percent = max;
+            final double[] progress = {0};
+            final Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (Utils.isActivityAlive(activity)) {
+                        activity.runOnUiThread(() -> {
+                            if (progress[0] >= (int) percent) {
+                                timer.cancel();
+                            } else {
+                                progress[0] += 1;
+                                listener.onTextProgress(progress[0]);
+                            }
+                        });
+                    }
+                }
+            }, 50, period);
+        } catch (Exception e) {
+            CrashReportingManager.logException(e);
+        }
+    }
+
+    public interface TextAnimationInterface{
+        void onTextProgress(double progress);
     }
 }

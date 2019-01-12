@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
+import dev.dworks.apps.anexplorer.AnalyzeActivity;
 import dev.dworks.apps.anexplorer.BaseActivity;
 import dev.dworks.apps.anexplorer.DocumentsActivity;
 import dev.dworks.apps.anexplorer.DocumentsApplication;
@@ -261,12 +262,15 @@ public class HomeFragment extends RecyclerFragment implements HomeAdapter.OnItem
                     cleanRAM();
                 } else {
                     //TODO add custom analyse
-                    Intent intent = new Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS);
-                    if(Utils.isIntentAvailable(getActivity(), intent)) {
-                        getActivity().startActivity(intent);
-                    } else  {
-                        Utils.showSnackBar(getActivity(), "Coming Soon!");
-                    }
+
+                    Intent intent = new Intent(getActivity(), AnalyzeActivity.class);
+                    intent.putExtra("RootPath", item.commonInfo.rootInfo.path);
+                    intent.putExtra("TotalBytes", item.commonInfo.rootInfo.totalBytes);
+                    intent.putExtra("AvailableBytes", item.commonInfo.rootInfo.availableBytes);
+                    intent.putExtra("RootName", item.commonInfo.rootInfo.title);
+
+
+                    startActivity(intent);
                     AnalyticsManager.logEvent("storage_analyze", params);
                 }
                 break;

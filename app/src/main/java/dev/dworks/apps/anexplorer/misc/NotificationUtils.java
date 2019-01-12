@@ -106,7 +106,7 @@ public class NotificationUtils {
     public static void createNotificationChannels(Context context){
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         createNotificationChannel(manager, SERVER_CHANNEL, "Info",
-                "Server Notification from AnExplorer", Color.BLUE);
+                "Server Notification from Open it!", Color.BLUE);
     }
 
     private static void createNotificationChannel(NotificationManager manager, String id,

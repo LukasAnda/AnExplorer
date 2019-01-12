@@ -374,6 +374,7 @@
             android:name=".queue.QueueActivity"
             android:label="@string/queue_list"
             android:theme="@style/DocumentsTheme.Document" />
+        <activity android:name=".AnalyzeActivity" android:theme="@style/DocumentsTheme.Document" android:label="@string/analyze" />
 
     </application>
 

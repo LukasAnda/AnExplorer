@@ -605,7 +605,7 @@ public class FileUtils {
     public static String convertToHumanReadableSize(Context context, long size) {
         final String count;
         if (size == 0) {
-            return "";
+            return "0B";
         } else if (size < KILO) {
             count = String.valueOf(size);
             return context.getString(R.string.bytes, count);

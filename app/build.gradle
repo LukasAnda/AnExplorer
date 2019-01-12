@@ -155,6 +155,8 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'me.grantland:autofittextview:0.2.1'
 
+    implementation 'com.txusballesteros:FitChart:1.0'
+
     implementation 'com.romandanylyk:pageindicatorview:1.0.2'
 
     implementation 'com.github.ayoubfletcher.GDPR-Admob-Android:consentsdk:0.1.7'
